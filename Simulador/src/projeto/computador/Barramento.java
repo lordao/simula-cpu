@@ -1,4 +1,4 @@
-package projeto.processador.componentes;
+package projeto.computador;
 
 public class Barramento {
     private static final Barramento dados    = new Barramento(TipoBarramento.Dados);

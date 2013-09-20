@@ -1,10 +1,12 @@
-package projeto.processador.componentes;
+package projeto.computador.processador;
 
-public class Registrador {
+import projeto.computador.Memoria;
+
+class Registrador {
 	private String alias;
 	private int palavra;
 	
-	public Registrador(String alias) {
+	Registrador(String alias) {
 		this.alias = alias;
 		palavra = 0;
 	}
@@ -19,6 +21,6 @@ public class Registrador {
 	
 	@Override
 	public String toString() {
-		return new StringBuilder().append("Registrador ").append(alias).append(": ").append(palavra).toString();
+		return "Registrador " + alias +": " + palavra;
 	}
 }

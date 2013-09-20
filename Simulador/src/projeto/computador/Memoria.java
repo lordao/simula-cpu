@@ -1,4 +1,4 @@
-package projeto.processador.componentes;
+package projeto.computador;
 
 public class Memoria {
     private static final Memoria instance = new Memoria();
