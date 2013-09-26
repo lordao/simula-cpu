@@ -1,26 +1,18 @@
 package projeto.computador.processador;
 
-import projeto.computador.Memoria;
-
-class Registrador {
+abstract class Registrador<T extends Number> {
 	private String alias;
-	private int palavra;
 	
 	Registrador(String alias) {
 		this.alias = alias;
-		palavra = 0;
 	}
 	
-	public void setPalavra(int palavra) {
-		this.palavra = palavra % Memoria.TAMANHO_PALAVRA;
-	}
+	abstract void setPalavra(T palavra);
 	
-	public int getPalavra() {
-		return palavra;
-	}
+	abstract T getPalavra();
 	
 	@Override
 	public String toString() {
-		return "Registrador " + alias +": " + palavra;
+		return "Registrador " + alias +": " + getPalavra();
 	}
 }
