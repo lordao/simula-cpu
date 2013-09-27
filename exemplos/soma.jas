@@ -1,5 +1,5 @@
 MOV $10, 32
-MOV $20, $30
+MOV $20, 30
 MOV AX, $10
 MOV BX, $20
 ADD AX, BX

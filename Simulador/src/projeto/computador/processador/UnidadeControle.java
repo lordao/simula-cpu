@@ -6,19 +6,54 @@ import projeto.computador.Main;
 
 class UnidadeControle {
 	private Decodificador decoder;
+	private boolean faltaOperando;
+	private boolean usaRegistrador;
+	private boolean isMov;
+	private short oprd;
+	private short end;
+	private byte reg1;
+	private byte reg2;
 	
-	public UnidadeControle() {
+	UnidadeControle() {
+		decoder = new Decodificador();
+		faltaOperando = false;
 	}
 	
-	public void obterInstrucao(short instrucao) {
+	void decodificarInstrucao(short instrucao) {
 		decoder.parse(instrucao);
 		boolean logicoAritmetica = decoder.isLogicoAritmetica();
-		boolean usaRegistrador   = decoder.usaRegistrador();
+		usaRegistrador = decoder.usaRegistrador();
+		isMov = decoder.isMov();
 		byte opcode = decoder.getOpcode();
-		if (!usaRegistrador) {
+		if (usaRegistrador) {
+			Main.estadoAtual = Estado.EXECUCAO;
+		} else {
+			faltaOperando = true;
 			Barramento.getBarramentoEndereco().escrever(decoder.getEndereco());
 			Barramento.getBarramentoControle().escrever(Barramento.SINAL_LEITURA);
 			Main.estadoAtual = Estado.BUSCA_OPERANDO;
+		}
+	}
+	
+
+	void escrever(short endereco, short dado) {
+		Barramento bEnd = Barramento.getBarramentoEndereco();
+		Barramento bControle = Barramento.getBarramentoControle();
+		Barramento bDados = Barramento.getBarramentoDados();
+
+		bEnd.escrever(endereco);
+		bDados.escrever(dado);
+		bControle.escrever(1);
+	}
+
+	
+	private void obterOperando(byte opcode) {
+		if (faltaOperando) {
+			
+		}
+		
+		switch(opcode) {
+		
 		}
 	}
 	

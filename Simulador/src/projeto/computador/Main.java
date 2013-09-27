@@ -5,7 +5,7 @@ import java.util.Scanner;
 import projeto.computador.processador.Processador;
 
 public class Main {
-	public static Estado estadoAtual = Estado.BUSCA_INSTRUCAO;
+	public static Estado estadoAtual = Estado.SOLICITAR_INSTRUCAO;
 	public static int ciclos = 0;
 	
 	public static void main(String[] args) {
@@ -15,14 +15,21 @@ public class Main {
 		mainLoop:
 		while (true) {
 			switch(estadoAtual) {
+			case SOLICITAR_INSTRUCAO:
+				cpu.solicitarInstrucao();
+				mem.ciclo();
+				estadoAtual = Estado.BUSCA_INSTRUCAO;
+				break;
 			case BUSCA_INSTRUCAO:
 				cpu.buscarInstrucao();
+				estadoAtual = Estado.DECODIFICACAO;
 				break;
 			case DECODIFICACAO:
-				
+				cpu.decodificar();
 				break;
 			case BUSCA_OPERANDO:
 				
+				mem.ciclo();
 				break;
 			case EXECUCAO:
 				
@@ -30,11 +37,10 @@ public class Main {
 			case HALT:
 				break mainLoop;
 			}
-			mem.ciclo();
 			ciclos++;
-			
 			
 			sc.nextLine();
 		}
+		sc.close();
 	}
 }

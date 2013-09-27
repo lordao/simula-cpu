@@ -46,4 +46,8 @@ class Decodificador {
 	byte getRegistrador2() {
 		return reg2;
 	}
+
+	public boolean isMov() {
+		return false;
+	}
 }

@@ -8,18 +8,19 @@ import projeto.computador.Barramento;
 public class Processador {
 	private Ula ula;
 	private UnidadeControle uControle;
-	private Map<Byte,Registrador> rs;
+	private Map<Byte, Registrador16> regs16;
+	private Map<Byte, Registrador32> regs32;
 	
-	private Registrador16 pc;
-	private Registrador16 ir;
-	private Registrador16 mar;
-	private Registrador16 mbr;
-
-	private Registrador16 ax;
-	private Registrador16 bx;
-	private Registrador16 cx;
-	private Registrador32 eax;
-	private Registrador32 ebx;
+	private static final byte PC_END = 0xE;
+	private static final byte IR_END = 0xF;
+	
+	private static final byte AX_END = 0x0;
+	private static final byte BX_END = 0x1;
+	private static final byte CX_END = 0x2;
+	private static final byte DX_END = 0x3;
+	
+	private static final byte EAX_END = 0x4;
+	private static final byte EBX_END = 0x5;
 
 	private static Processador instance;
 
@@ -31,57 +32,70 @@ public class Processador {
 	}
 
 	private Processador() {
-		rs = new HashMap<>();
-		
+		regs16 = new HashMap<>();
+		regs32 = new HashMap<>();
+
 		ula = new Ula();
 		uControle = new UnidadeControle();
 
-		rs.put((byte) 0x00, new Registrador16("PC"));
-		rs.put((byte) 0x01, new Registrador16("AX"));
-		rs.put((byte) 0x02, new Registrador16("BX"));
-		rs.put((byte) 0x03, new Registrador16("CX"));
-		rs.put((byte) 0x12, new Registrador32("EAX"));
-		rs.put((byte) 0x12, new Registrador32("EBX"));
+		regs16.put(PC_END, new Registrador16("PC"));
+		regs16.put(IR_END, new Registrador16("IR"));
 		
-//		pc = new Registrador16("PC");
-//		ax = new Registrador16("AX");
-//		bx = new Registrador16("BX");
-//		cx = new Registrador16("CX");
-//		eax = new Registrador32("EAX");
-//		ebx = new Registrador32("EBX");
+		regs16.put(AX_END, new Registrador16("AX"));
+		regs16.put(BX_END, new Registrador16("BX"));
+		regs16.put(CX_END, new Registrador16("CX"));
+		regs16.put(DX_END, new Registrador16("DX"));
+		
+		regs32.put(EAX_END, new Registrador32("EAX"));
+		regs32.put(EBX_END, new Registrador32("EBX"));
+	}
+
+	public void solicitarInstrucao() {
+		Barramento bEnd = Barramento.getBarramentoEndereco();
+		Barramento bControle = Barramento.getBarramentoControle();
+
+		bEnd.escrever(getRegistrador(PC_END));
+		bControle.escrever(0);
 	}
 
 	public void buscarInstrucao() {
-		Barramento bEnd = Barramento.getBarramentoEndereco();
-		Barramento bControle = Barramento.getBarramentoControle();
-
-		boolean ack = (bControle.ler() >> 1) == 1;
-
-		if (ack) {
-			Barramento bDados = Barramento.getBarramentoDados();
-			ir.setPalavra(bDados.ler());
-			bControle.escrever(0);
-		} else {
-			bEnd.escrever(pc.getPalavra());
-			bControle.escrever(0);
-		}
+		Barramento bDados = Barramento.getBarramentoDados();
+		setRegistrador(IR_END, bDados.ler());
 	}
 
-	public void escrever(short endereco, short dado) {
-		Barramento bEnd = Barramento.getBarramentoEndereco();
-		Barramento bControle = Barramento.getBarramentoControle();
-		Barramento bDados = Barramento.getBarramentoDados();
-
-		bEnd.escrever(endereco);
-		bDados.escrever(dado);
-		bControle.escrever(1);
+	public void decodificar() {
+		uControle.decodificarInstrucao(getRegistrador16(IR_END));
+	}
+	
+	public void buscarOperando() {
+		
 	}
 
 	public int getRegistrador(byte endereco) {
-		return rs.get(endereco).getPalavra().intValue();
+		if (endereco > 0x0F) {
+			return getRegistrador32(endereco);
+		} else {
+			return getRegistrador16(endereco);
+		}
 	}
-	
+
+	public int getRegistrador32(byte endereco) {
+		return regs32.get(endereco).getPalavra();
+	}
+
+	public short getRegistrador16(byte endereco) {
+		return regs16.get(endereco).getPalavra();
+	}
+
 	public void setRegistrador(byte endereco, int palavra) {
-		rs.get(endereco).setPalavra(palavra);
+		try {
+			if (endereco > 0x0F) {
+				regs32.get(endereco).setPalavra(palavra);
+			} else {
+				regs16.get(endereco).setPalavra(palavra);
+			}
+		} catch (NullPointerException n) {
+			System.err.printf("Endereço 0x%x inexistente!\n", endereco);
+		}
 	}
 }

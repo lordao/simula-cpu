@@ -1,6 +1,7 @@
 package projeto.computador;
 
 public enum Estado {
+	SOLICITAR_INSTRUCAO,
 	BUSCA_INSTRUCAO,
 	DECODIFICACAO,
 	BUSCA_OPERANDO,
