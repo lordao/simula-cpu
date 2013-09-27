@@ -13,6 +13,6 @@ abstract class Registrador<T extends Number> {
 	
 	@Override
 	public String toString() {
-		return "Registrador " + alias +": " + getPalavra();
+		return alias +": " + getPalavra();
 	}
 }

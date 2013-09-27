@@ -58,9 +58,9 @@ class Ula {
 		
 		int zero     = 1 & result,
 			negativo = result >>> 31,
-			overflow = result != ((short) result) ? 1 : 0;
-		
-		int palavra = overflow;
+			igual    = oprd1 == oprd2 ? 1 : 0;
+		//INZ
+		int palavra = igual;
 		palavra = palavra << 1;
 		palavra = palavra | negativo;
 		palavra = palavra << 1;
