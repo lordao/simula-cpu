@@ -1,23 +1,22 @@
 package projeto.computador.processador;
 
-public class Registrador16 extends Registrador<Short> {
-	private Short palavra;
+import projeto.computador.Memoria;
+
+public class Registrador16 extends Registrador<Integer> {
+	private Integer palavra;
 	
 	Registrador16(String alias) {
 		super(alias);
+		palavra = 0;
 	}
 
 	@Override
-	void setPalavra(Short palavra) {
-		this.palavra = palavra;
-	}
-	
 	void setPalavra(Integer palavra) {
-		this.palavra = palavra.shortValue();
+		this.palavra = palavra & (Memoria.TAMANHO_PALAVRA - 1);
 	}
 
 	@Override
-	Short getPalavra() {
+	Integer getPalavra() {
 		return palavra;
 	}
 	

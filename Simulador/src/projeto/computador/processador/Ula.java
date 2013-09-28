@@ -1,25 +1,25 @@
 package projeto.computador.processador;
 
 class Ula {	
-	private short oprd1;
-	private short oprd2;
+	private int oprd1;
+	private int oprd2;
 	private RegistradorEstado regUla;
 	
-	private short opcode;
+	private int opcode;
 	
 	Ula() {
 		regUla = new RegistradorEstado("Registrador de Estado (ULA)");
 	}
 	
-	void setOprd1(short oprd) {
+	void setOprd1(int oprd) {
 		this.oprd1 = oprd;
 	}
 	
-	void setOprd2(short oprd) {
+	void setOprd2(int oprd) {
 		this.oprd2 = oprd;
 	}
 	
-	void setOperacao(short opcode) {
+	void setOperacao(int opcode) {
 		this.opcode = opcode;
 	}
 	

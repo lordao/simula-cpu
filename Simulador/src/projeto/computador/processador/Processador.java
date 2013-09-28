@@ -11,8 +11,8 @@ public class Processador {
 	private Ula ula;
 	private UnidadeControle uControle;
 	private Map<Byte, Registrador16> regs;
-	private short enderecoAtual;
-	public static Estado estadoAtual = Estado.BUSCA_INSTRUCAO;
+	private int enderecoAtual;
+	public static Estado estadoAtual = Estado.SOLICITAR_INSTRUCAO;
 	public static int ciclos = 0;
 
 	public static final byte AX_END = 0b00;
@@ -61,19 +61,20 @@ public class Processador {
 		Barramento.getBarramentoDados().escrever(getRegistrador(MBR_END));
 	}
 	
-	void escrita(short endereco, short dado) {
+	void escrita(int endereco, int dado) {
 		setRegistrador(MAR_END, endereco);
 		setRegistrador(MBR_END, dado);
 		Barramento.getBarramentoControle().escrever(Barramento.SINAL_ESCRITA);
 	}
 	
-	void leitura(short endereco) {
+	void leitura(int endereco) {
 		setRegistrador(MAR_END, endereco);
 		Barramento.getBarramentoControle().escrever(Barramento.SINAL_LEITURA);
 	}
 
 	public void solicitarInstrucao() {
 		leitura(getRegistrador(PC_END));
+		estadoAtual = Estado.BUSCA_INSTRUCAO;
 	}
 
 	public void buscarInstrucao() {
@@ -85,20 +86,25 @@ public class Processador {
 		byte opcode = uControle.decodificarInstrucao(getRegistrador(IR_END));
 		if (uControle.getDecoder().isLogicoAritmetica()) {
 			ula.setOperacao(opcode);
+			estadoAtual = Estado.BUSCA_OPERANDO;
 		}
 		if (uControle.getDecoder().precisaBusca()) {
 			estadoAtual = Estado.BUSCA_OPERANDO;
 			enderecoAtual = getRegistrador(PC_END);
+			leitura(++enderecoAtual);
+		} else {
+			estadoAtual = Estado.EXECUCAO;
 			leitura(++enderecoAtual);
 		}
 	}
 
 	public void buscarOperando() {
 		if (uControle.getDecoder().isLogicoAritmetica()) {
-			ula.setOprd1((short) uControle.getDecoder().getReg1());
-			ula.setOprd2((short) uControle.getDecoder().getReg2());
+			ula.setOprd1( uControle.getDecoder().getReg1());
+			ula.setOprd2( uControle.getDecoder().getReg2());
+			estadoAtual = Estado.EXECUCAO;
 		} else {
-			short oprd = getRegistrador(MBR_END);
+			int oprd = getRegistrador(MBR_END);
 			if (uControle.buscaOperandos(oprd)) {
 				estadoAtual = Estado.EXECUCAO;
 			} else {
@@ -114,7 +120,10 @@ public class Processador {
 		} else {
 			uControle.executar();
 		}
-		setPc(++enderecoAtual);
+		setPc(enderecoAtual);
+		if (estadoAtual != Estado.HALT) {
+			estadoAtual = Estado.SOLICITAR_INSTRUCAO;
+		}
 	}
 
 	private void guardarResultado(int result, byte opcode) {
@@ -128,8 +137,8 @@ public class Processador {
 			break;
 		case 2:
 		case 3:
-			short cx = (short) (result >>> 16),
-			dx = (short) result;
+			int cx =  (result >>> 16),
+			dx =  result;
 			setRegistrador(CX_END, cx);
 			setRegistrador(DX_END, dx);
 			break;
@@ -139,7 +148,7 @@ public class Processador {
 		}
 	}
 
-	short getRegistrador(byte endereco) {
+	int getRegistrador(byte endereco) {
 		return regs.get(endereco).getPalavra();
 	}
 
@@ -166,12 +175,12 @@ public class Processador {
 		System.out.println(sb.toString());
 	}
 
-	void setPc(short enderecoAtual) {
+	void setPc(int enderecoAtual) {
 		setRegistrador(PC_END, enderecoAtual);
 	}
 	
 	void incrementarPc() {
-		short s = getRegistrador(PC_END);
+		int s = getRegistrador(PC_END);
 		setRegistrador(PC_END, ++s);
 	}
 }

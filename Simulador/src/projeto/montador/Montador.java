@@ -27,13 +27,12 @@ public class Montador {
 		Programa p = new Programa();
 		loop:
 		while (linha != null) {	
-			System.out.println(linha);
 			if (linha.isEmpty() || linha.charAt(0) == ';') {
 				linha = leitor.readLine();
 				continue loop;
 			}
 			byte opcode, reg1, reg2;
-			short end, cnst;
+			int end, cnst;
 			
 			String[] tokens = linha.split(" ");
 			switch (tokens[0]) {
@@ -51,7 +50,7 @@ public class Montador {
 				}
 				reg1 = parseReg(tokens[1]);
 				reg2 = parseReg(tokens[2]);
-				p.addInstrucao((short) (((((opcode << 2) | reg1) << 2) | reg2) << 6));
+				p.addInstrucao(((((opcode << 2) | reg1) << 2) | reg2) << 6);
 				if (tokens.length > 3) {
 					System.out.println("Ignorando resto da linha...");
 				}
@@ -61,13 +60,55 @@ public class Montador {
 				switch(tokens[1].charAt(0)) {
 				case '%':
 					reg1 = parseReg(tokens[1]);
-					
+					switch (tokens[2].charAt(0)) {
+					//MOV %<reg>, %<reg>
+					case '%':
+						opcode = 0b01001;
+						reg2 = parseReg(tokens[2]);
+						p.addInstrucao(((((opcode << 7) | reg1) << 2) | reg2) << 2);
+						break;
+					//MOV %<reg>, $<end>
+					case '$':
+						opcode = 0b01000;
+						end = Integer.parseInt(tokens[2].substring(1));
+						p.addInstrucao(((opcode << 9) | reg1) << 2);
+						p.addInstrucao(end);
+						break;
+					//MOV %<reg>, $<const>
+					case '#':
+						opcode = 0b01100;
+						cnst = Integer.parseInt(tokens[2].substring(1));
+						p.addInstrucao(((opcode << 9) | reg1) << 2);
+						p.addInstrucao(cnst);
+						break;
+					default:
+						throw new IllegalArgumentException("Padrão não reconhecido!");
+					}
 					break;
 				case '$':
+					end = Integer.parseInt(tokens[1].substring(1));
+					switch (tokens[2].charAt(0)) {
+					//MOV $<end>, %<reg>
+					case '%':
+						opcode = 0b01001;
+						reg1 = parseReg(tokens[2]);
+						p.addInstrucao(((opcode << 9) | reg1) << 2);
+						p.addInstrucao(end);
+						break;
+					case '$':
+						throw new IllegalArgumentException("MOV de memória para memória não é suportado!");
+					//MOV $<end>, #<const>
+					case '#':
+						opcode = 0b01011;
+						cnst = Integer.parseInt(tokens[2].substring(1));
+						p.addInstrucao(opcode << 11);
+						break;
+					default:
+						throw new IllegalArgumentException("Padrão não reconhecido!");
+					}
 					break;
 				case '#':
 					throw new IllegalArgumentException("Constante não pode ser destino em MOV!");
-				
 				default:
 					throw new IllegalArgumentException("Padrão não reconhecido!");
 				}
@@ -96,7 +137,7 @@ public class Montador {
 			case "JNG":
 			case "HLT":
 				opcode = opcodeFluxo(tokens[0]);
-				p.addInstrucao((short) (opcode << 11));
+				p.addInstrucao((opcode << 11));
 				break;
 			default:
 				throw new IllegalArgumentException("Padrão não reconhecido!");
@@ -107,7 +148,7 @@ public class Montador {
 	}
 
 	private byte parseReg(String string) {
-		switch(string.substring(1)) {
+		switch(string.substring(1).split(",")[0]) {
 		case "AX":
 			return Processador.AX_END;
 		case "BX":

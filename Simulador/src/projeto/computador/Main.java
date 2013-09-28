@@ -13,25 +13,25 @@ public class Main {
 //  		String programaPath = args[0];
 		String programaPath = "/tmp/teste";
 		Montador m = Montador.getInstance();
+		
+		Programa p = null;
 		try {
-			Programa p = m.parseFromFile(programaPath);
-			Iterator<Short> iter = p.iterador();
-			while (iter.hasNext()) {
-				System.out.println(Integer.toBinaryString(iter.next()));
-			}
-			System.exit(0);
+			p = m.parseFromFile(programaPath);
 		} catch (IOException io) {
 			System.err.println(io.getMessage());
 			io.printStackTrace();
 			System.exit(1);
 		}
-  		
+		
+		Memoria.gerarMemoria(p);
+		
 		Memoria mem = Memoria.getInstance();
 		Processador cpu = Processador.getInstance();
 		Scanner sc = new Scanner(System.in);
 		
 		mainLoop: 
 		while (true) {
+			System.out.printf("Ciclo %d - %s\n", Processador.ciclos, Processador.estadoAtual.toString());
 			cpu.lerBarramentos();
 			switch (Processador.estadoAtual) {
 			case SOLICITAR_INSTRUCAO:
@@ -56,7 +56,6 @@ public class Main {
 			mem.ciclo();
 			Processador.ciclos++;
 			
-			System.out.printf("Ciclo %d\n", Processador.ciclos);
 			cpu.show();
 			sc.nextLine();
 		}

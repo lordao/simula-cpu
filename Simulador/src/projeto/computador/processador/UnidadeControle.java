@@ -11,12 +11,12 @@ class UnidadeControle {
 		decoder = null;
 	}
 
-	byte decodificarInstrucao(short instrucao) {
+	byte decodificarInstrucao(int instrucao) {
 		decoder = new Decodificador(instrucao);
 		return decoder.getOpcode();
 	}
 
-	boolean buscaOperandos(short oprd) {
+	boolean buscaOperandos(int oprd) {
 		if (decoder.isLogicoAritmetica()) {
 			return true;
 		}
@@ -61,12 +61,23 @@ class UnidadeControle {
 	void executar() {
 		Processador p = Processador.getInstance();
 		if (decoder.isMov()) {
-			byte r1 = decoder.getReg1(),
-				 r2 = decoder.getReg2();
-			short val1 = p.getRegistrador(r1),
-				  val2 = p.getRegistrador(r2),
-				  end  = decoder.getEnd1Val(),
-				  dado = decoder.getDado();
+			byte r1 = 0, r2 = 0;
+			int val1 = 0, val2 = 0, end = 0, dado = 0;
+			
+			if (decoder.getReg1() != null) {
+				r1 = decoder.getReg1();
+				val1 = p.getRegistrador(r1);
+			}
+			if (decoder.getReg2() != null) {
+				r2 = decoder.getReg2();
+				val2 = p.getRegistrador(r2);
+			}
+			if (decoder.getEnd1() != null) {
+				end  = decoder.getEnd1Val();
+			}
+			if (decoder.getDado() != null) {
+				dado = decoder.getDado();
+			}
 			
 			
 			switch (decoder.getOpcode()) {
