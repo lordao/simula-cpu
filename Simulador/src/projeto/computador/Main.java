@@ -11,7 +11,7 @@ public class Main {
 
 	public static void main(String[] args) {
 //  		String programaPath = args[0];
-		String programaPath = "/tmp/teste";
+		String programaPath = "/tmp/soma.jas";
 		Montador m = Montador.getInstance();
 		
 		Programa p = null;

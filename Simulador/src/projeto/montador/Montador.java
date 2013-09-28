@@ -86,7 +86,7 @@ public class Montador {
 					}
 					break;
 				case '$':
-					end = Integer.parseInt(tokens[1].substring(1));
+					end = Integer.parseInt(tokens[1].substring(1).split(",")[0]);
 					switch (tokens[2].charAt(0)) {
 					//MOV $<end>, %<reg>
 					case '%':
