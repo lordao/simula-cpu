@@ -1,8 +1,8 @@
 package projeto.computador.processador;
 
 class Ula {	
-	private int oprd1;
-	private int oprd2;
+	private short oprd1;
+	private short oprd2;
 	private RegistradorEstado regUla;
 	
 	private int opcode;
@@ -11,11 +11,11 @@ class Ula {
 		regUla = new RegistradorEstado("Registrador de Estado (ULA)");
 	}
 	
-	void setOprd1(int oprd) {
+	void setOprd1(short oprd) {
 		this.oprd1 = oprd;
 	}
 	
-	void setOprd2(int oprd) {
+	void setOprd2(short oprd) {
 		this.oprd2 = oprd;
 	}
 	
@@ -57,9 +57,12 @@ class Ula {
 		}
 		
 		int zero     = 1 & result,
+			negativo = result >>> 31,
 			igual    = oprd1 == oprd2 ? 1 : 0;
-		//IZ
+		//INZ
 		int palavra = igual;
+		palavra = palavra << 1;
+		palavra = palavra | negativo;
 		palavra = palavra << 1;
 		palavra = palavra | zero;
 		

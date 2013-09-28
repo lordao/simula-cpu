@@ -4,19 +4,19 @@ import java.util.Iterator;
 
 public class Memoria {
     private static Memoria instance;
-    public static final int TAMANHO_PALAVRA = (int) Math.pow(2, 16);
-    public static final int TAMANHO_MEMORIA = (int) Math.pow(2, 16);
+    public static final int TAMANHO_PALAVRA = Short.MAX_VALUE;
+    public static final int TAMANHO_MEMORIA = Short.MAX_VALUE;
 
-    private int[] mem;
+    private short[] mem;
 
     private Memoria() {
-        mem = new int[TAMANHO_MEMORIA];
+        mem = new short[TAMANHO_MEMORIA];
     }
     
     private Memoria(Programa p) {
     	this();
     	int i = 0;
-    	Iterator<Integer> iter = p.iterador();
+    	Iterator<Short> iter = p.iterador();
     	while (iter.hasNext()) {
     		mem[i++] = iter.next();
     	}
@@ -36,11 +36,11 @@ public class Memoria {
     }
     
     public void ciclo() {
-        int controle = Barramento.getBarramentoControle().ler();
+        short controle = Barramento.getBarramentoControle().ler();
         
-        int endereco = Barramento.getBarramentoEndereco().ler();
+        short endereco = Barramento.getBarramentoEndereco().ler();
         if (controle == Barramento.SINAL_ESCRITA) {
-        	int dado = Barramento.getBarramentoDados().ler();
+        	short dado = Barramento.getBarramentoDados().ler();
         	mem[endereco] = dado;
         } else if (controle == Barramento.SINAL_LEITURA) {
         	Barramento.getBarramentoDados().escrever(mem[endereco]);

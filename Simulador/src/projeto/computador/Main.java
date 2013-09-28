@@ -22,10 +22,10 @@ public class Main {
 			io.printStackTrace();
 			System.exit(1);
 		}
-		p.addInstrucao(0b0000100000000000);
-		p.addInstrucao(3);
-		p.addInstrucao(16);
-		p.addInstrucao(0b0011100000000000);
+//		p.addInstrucao(0b0000100000000000);
+//		p.addInstrucao(3);
+//		p.addInstrucao(16);
+//		p.addInstrucao(0b0011100000000000);
 		Memoria.gerarMemoria(p);
 		
 		Memoria mem = Memoria.getInstance();

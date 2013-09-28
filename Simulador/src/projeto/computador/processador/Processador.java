@@ -11,7 +11,7 @@ public class Processador {
 	private Ula ula;
 	private UnidadeControle uControle;
 	private Map<Byte, Registrador16> regs;
-	int enderecoAtual;
+	short enderecoAtual;
 	public static Estado estadoAtual = Estado.SOLICITAR_INSTRUCAO;
 	public static int ciclos = 0;
 
@@ -61,13 +61,13 @@ public class Processador {
 		Barramento.getBarramentoDados().escrever(getRegistrador(MBR_END));
 	}
 	
-	void escrita(int endereco, int dado) {
+	void escrita(short endereco, short dado) {
 		setRegistrador(MAR_END, endereco);
 		setRegistrador(MBR_END, dado);
 		Barramento.getBarramentoControle().escrever(Barramento.SINAL_ESCRITA);
 	}
 	
-	void leitura(int endereco) {
+	void leitura(short endereco) {
 		setRegistrador(MAR_END, endereco);
 		Barramento.getBarramentoControle().escrever(Barramento.SINAL_LEITURA);
 	}
@@ -103,7 +103,7 @@ public class Processador {
 			
 			estadoAtual = Estado.EXECUCAO;
 		} else {
-			int oprd = getRegistrador(MBR_END);
+			short oprd = getRegistrador(MBR_END);
 			if (uControle.buscaOperandos(oprd)) {
 				estadoAtual = Estado.EXECUCAO;
 			} else {
@@ -113,7 +113,7 @@ public class Processador {
 	}
 
 	public void executar() {
-		int pc = getRegistrador(PC_END);
+		short pc = getRegistrador(PC_END);
 		if (uControle.getDecoder().isLogicoAritmetica()) {
 			int result = ula.executar();
 			guardarResultado(result, uControle.getDecoder().getReg1(), uControle.getDecoder().getOpcode());
@@ -133,29 +133,27 @@ public class Processador {
 		switch (opcode) {
 		case 0:
 		case 1:
+		case 4:
 		case 5:
 		case 6:
 		case 7:
-			setRegistrador(uControle.getDecoder().getReg1(), result);
+			setRegistrador(uControle.getDecoder().getReg1(), (short) result);
 			break;
 		case 2:
 		case 3:
-			int cx =  (result >>> 16),
-			dx =  result;
+			short cx =  (short) (result >>> 16),
+			dx =  (short) result;
 			setRegistrador(CX_END, cx);
 			setRegistrador(DX_END, dx);
-			break;
-		case 4:
-			setRegistrador(uControle.getDecoder().getReg1(), result);
 			break;
 		}
 	}
 
-	int getRegistrador(byte endereco) {
+	short getRegistrador(byte endereco) {
 		return regs.get(endereco).getPalavra();
 	}
 
-	void setRegistrador(byte endereco, int palavra) {
+	void setRegistrador(byte endereco, short palavra) {
 		try {
 			regs.get(endereco).setPalavra(palavra);
 		} catch (NullPointerException n) {
@@ -178,11 +176,11 @@ public class Processador {
 		System.out.println(sb.toString());
 	}
 
-	void setPc(int enderecoAtual) {
+	void setPc(short enderecoAtual) {
 		setRegistrador(PC_END, enderecoAtual);
 	}
 	
 	void incrementarPc() {
-		setPc(Processador.getInstance().enderecoAtual + 1);
+		setPc((short) (enderecoAtual + 1));
 	}
 }

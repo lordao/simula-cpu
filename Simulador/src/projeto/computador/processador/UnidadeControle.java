@@ -11,12 +11,12 @@ class UnidadeControle {
 		decoder = null;
 	}
 
-	byte decodificarInstrucao(int instrucao) {
+	byte decodificarInstrucao(short instrucao) {
 		decoder = new Decodificador(instrucao);
 		return decoder.getOpcode();
 	}
 
-	boolean buscaOperandos(int oprd) {
+	boolean buscaOperandos(short oprd) {
 		if (decoder.isLogicoAritmetica()) {
 			return true;
 		}
@@ -62,7 +62,7 @@ class UnidadeControle {
 		Processador p = Processador.getInstance();
 		if (decoder.isMov()) {
 			byte r1 = 0, r2 = 0;
-			int val1 = 0, val2 = 0, end = 0, dado = 0;
+			short val1 = 0, val2 = 0, end = 0, dado = 0;
 			
 			if (decoder.getReg1() != null) {
 				r1 = decoder.getReg1();
@@ -136,17 +136,22 @@ class UnidadeControle {
 			break;
 		// JE
 		case 4:
-			if (((p.getEstadoUla() >> 1) & 1) == 1) {
+			if (((p.getEstadoUla() >> 2) & 1) == 1) {
 				p.incrementarPc();
 			}
 			break;
 		// JNE
 		case 5:
-			if (((p.getEstadoUla() >> 1) & 1) == 0) {
+			if (((p.getEstadoUla() >> 2) & 1) == 0) {
 				p.incrementarPc();
 			}
 			break;
+		// JNG
 		case 6:
+			if (((p.getEstadoUla() >> 1) & 1) == 1) {
+				p.incrementarPc();
+			}
+			break;
 		case 7:
 			Processador.estadoAtual = Estado.HALT;
 			break;

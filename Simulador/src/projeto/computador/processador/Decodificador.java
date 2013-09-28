@@ -5,13 +5,13 @@ class Decodificador {
 	private boolean isMov;
 	private byte opcode;
 
-	private Integer end1 = null;
-	private Integer end2 = null;
+	private Short end1 = null;
+	private Short end2 = null;
 	
-	private Integer end1Val = null;
-	private Integer end2Val = null;
+	private Short end1Val = null;
+	private Short end2Val = null;
 	
-	private Integer dado = null;
+	private Short dado = null;
 
 	private Byte reg1 = null;
 	private Byte reg2 = null;
@@ -94,19 +94,19 @@ class Decodificador {
 		return reg2;
 	}
 
-	Integer getEnd1() {
+	Short getEnd1() {
 		return end1;
 	}
 
-	Integer getEnd2() {
+	Short getEnd2() {
 		return end2;
 	}
 	
-	Integer getEnd1Val() {
+	Short getEnd1Val() {
 		return end1Val;
 	}
 
-	Integer getEnd2Val() {
+	Short getEnd2Val() {
 		return end2Val;
 	}
 	
@@ -114,27 +114,27 @@ class Decodificador {
 		return isMov;
 	}
 
-	Integer getDado() {
+	Short getDado() {
 		return dado;
 	}
 	
-	void setEnd1(Integer end1) {
+	void setEnd1(Short end1) {
 		this.end1 = end1;
 	}
 	
-	void setEnd2(Integer end2) {
+	void setEnd2(Short end2) {
 		this.end2 = end2;
 	}
 	
-	void setEnd1Val(Integer end1Val) {
+	void setEnd1Val(Short end1Val) {
 		this.end1Val = end1Val;
 	}
 	
-	void setEnd2Val(Integer end2Val) {
+	void setEnd2Val(Short end2Val) {
 		this.end2Val = end2Val;
 	}
 	
-	void setDado(Integer dado) {
+	void setDado(Short dado) {
 		this.dado = dado;
 	}
 }

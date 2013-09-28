@@ -5,18 +5,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Programa {
-	private List<Integer> instrucoes;
+	private List<Short> instrucoes;
 	
 	
 	public Programa() {
-		instrucoes = new LinkedList<Integer>();
+		instrucoes = new LinkedList<Short>();
 	}
 	
-	public void addInstrucao(int instrucao) {
+	public void addInstrucao(short instrucao) {
 		instrucoes.add(instrucao);
 	}
 	
-	public Iterator<Integer> iterador() {
+	public Iterator<Short> iterador() {
 		return instrucoes.iterator();
+	}
+
+	public void addInstrucao(int instrucao) {
+		addInstrucao((short) instrucao); 
 	}
 }

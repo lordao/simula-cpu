@@ -138,6 +138,7 @@ public class Montador {
 			case "JNZ":
 			case "JE":
 			case "JNE":
+			case "JNG":
 			case "HLT":
 				opcode = opcodeFluxo(tokens[0]);
 				p.addInstrucao((opcode << 11));
@@ -200,6 +201,8 @@ public class Montador {
 			return 0b00100;
 		case "JNE":
 			return 0b00101;
+		case "JNG":
+			return 0b00110;
 		case "HLT":
 			return 0b00111;
 		default:
