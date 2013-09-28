@@ -2,52 +2,134 @@ package projeto.computador.processador;
 
 class Decodificador {
 	private boolean logicoAritmetica;
+	private boolean isMov;
 	private byte opcode;
-	private short endereco;
-	private byte reg1;
-	private byte reg2;
-	private boolean usaRegistrador;
 
-	Decodificador() {
+	private Short end1 = null;
+	private Short end2 = null;
+	
+	private Short end1Val = null;
+	private Short end2Val = null;
+	
+	private Short dado = null;
+
+	private Byte reg1 = null;
+	private Byte reg2 = null;
+
+	private int[] flags;
+	private boolean precisaBusca = false;
+
+	Decodificador(short instrucao) {
+		parse(instrucao);
 	}
 
-	void parse(short instrucao) {
+	private void parse(short instrucao) {
 		logicoAritmetica = instrucao >>> 15 == 0;
-		usaRegistrador = (instrucao & 0x0800) != 0;
-		opcode = (byte) (instrucao >>> 11);
-		if (!usaRegistrador) {
-			this.endereco = (short) (instrucao & 0x0FFF);
+		if (logicoAritmetica) {
+			opcode = (byte) ((instrucao >>> 10) & 0b111);
+			reg1 = (byte) ((instrucao >> 3) & 0b111);
+			reg2 = (byte) (instrucao & 0b111);
 		} else {
-			this.reg1 = (byte) ((instrucao & 0x00F0) >> 3);
-			this.reg2 = (byte) (instrucao & 0x000F);
+			isMov = ((instrucao >>> 14) & 0b01) == 1;
+			if (isMov) {
+				precisaBusca = true;
+				opcode = (byte) ((instrucao >>> 11) & 0b111);
+				switch (opcode) {
+				//0: Registrador
+				//1: Memória
+				//2: Constante
+				case 0:
+					flags = new int[] { 0, 1 };
+					break;
+				case 1:
+					flags = new int[] { 1, 0 };
+					break;
+				case 2:
+					flags = new int[] { 0, 0 };
+					break;
+				case 3:
+					flags = new int[] { 2, 1 };
+					break;
+				case 4:
+					flags = new int[] { 2, 0 };
+					break;
+				}
+			} else {
+				opcode = (byte) ((instrucao >>> 10) & 0b111);
+				if (opcode == 1) {
+					precisaBusca = true;
+					end1 = (short) (instrucao & 0b1111111111);
+					flags = new int[] { 0 };
+				}
+			}
 		}
 	}
 
 	boolean isLogicoAritmetica() {
 		return logicoAritmetica;
 	}
+	
+	boolean precisaBusca() {
+		return precisaBusca;
+	}
 
-	boolean usaRegistrador() {
-		return usaRegistrador;
+	int[] getFlags() {
+		return flags;
 	}
 
 	byte getOpcode() {
 		return opcode;
 	}
 
-	short getEndereco() {
-		return endereco;
-	}
-
-	byte getRegistrador1() {
+	Byte getReg1() {
 		return reg1;
 	}
-
-	byte getRegistrador2() {
+	
+	Byte getReg2() {
 		return reg2;
 	}
 
-	public boolean isMov() {
-		return false;
+	Short getEnd1() {
+		return end1;
+	}
+
+	Short getEnd2() {
+		return end2;
+	}
+	
+	Short getEnd1Val() {
+		return end1Val;
+	}
+
+	Short getEnd2Val() {
+		return end2Val;
+	}
+	
+	boolean isMov() {
+		return !isLogicoAritmetica() && (opcode & 0b100) == 0b100;
+	}
+
+	Short getDado() {
+		return dado;
+	}
+	
+	void setEnd1(Short end1) {
+		this.end1 = end1;
+	}
+	
+	void setEnd2(Short end2) {
+		this.end2 = end2;
+	}
+	
+	void setEnd1Val(Short end1Val) {
+		this.end1Val = end1Val;
+	}
+	
+	void setEnd2Val(Short end2Val) {
+		this.end2Val = end2Val;
+	}
+	
+	void setDado(Short dado) {
+		this.dado = dado;
 	}
 }
