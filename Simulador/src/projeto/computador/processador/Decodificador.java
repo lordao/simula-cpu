@@ -64,7 +64,6 @@ class Decodificador {
 				opcode = (byte) ((instrucao >>> 11) & 0b111);
 				if (opcode == 1) {
 					precisaBusca = true;
-					end1 = (instrucao & 0b11111111111);
 					flags = new int[] { 0 };
 				}
 			}

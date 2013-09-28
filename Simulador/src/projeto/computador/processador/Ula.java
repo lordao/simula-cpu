@@ -57,12 +57,9 @@ class Ula {
 		}
 		
 		int zero     = 1 & result,
-			negativo = result >>> 31,
 			igual    = oprd1 == oprd2 ? 1 : 0;
-		//INZ
+		//IZ
 		int palavra = igual;
-		palavra = palavra << 1;
-		palavra = palavra | negativo;
 		palavra = palavra << 1;
 		palavra = palavra | zero;
 		

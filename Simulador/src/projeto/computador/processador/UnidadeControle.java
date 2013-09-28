@@ -120,7 +120,7 @@ class UnidadeControle {
 			break;
 		// JMP
 		case 1:
-			p.setRegistrador(Processador.PC_END, decoder.getEnd1());
+			p.setPc(decoder.getEnd1());
 			break;
 		// JZ
 		case 2:
@@ -136,23 +136,17 @@ class UnidadeControle {
 			break;
 		// JE
 		case 4:
-			if (((p.getEstadoUla() >> 2) & 1) == 1) {
+			if (((p.getEstadoUla() >> 1) & 1) == 1) {
 				p.incrementarPc();
 			}
 			break;
 		// JNE
 		case 5:
-			if (((p.getEstadoUla() >> 2) & 1) == 0) {
+			if (((p.getEstadoUla() >> 1) & 1) == 0) {
 				p.incrementarPc();
 			}
 			break;
-		// JNG
 		case 6:
-			if (((p.getEstadoUla() >> 1) & 1) == 1) {
-				p.incrementarPc();
-			}
-			break;
-		// HLT
 		case 7:
 			Processador.estadoAtual = Estado.HALT;
 			break;

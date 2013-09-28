@@ -50,7 +50,7 @@ public class Montador {
 				}
 				reg1 = parseReg(tokens[1]);
 				reg2 = parseReg(tokens[2]);
-				p.addInstrucao(((((opcode << 2) | reg1) << 2) | reg2) << 6);
+				p.addInstrucao((((opcode << 8) | reg1) << 2) | reg2);
 				if (tokens.length > 3) {
 					System.out.println("Ignorando resto da linha...");
 				}
@@ -65,20 +65,20 @@ public class Montador {
 					case '%':
 						opcode = 0b01001;
 						reg2 = parseReg(tokens[2]);
-						p.addInstrucao(((((opcode << 7) | reg1) << 2) | reg2) << 2);
+						p.addInstrucao((((opcode << 9) | reg1) << 2) | reg2);
 						break;
 					//MOV %<reg>, $<end>
 					case '$':
 						opcode = 0b01000;
 						end = Integer.parseInt(tokens[2].substring(1));
-						p.addInstrucao(((opcode << 9) | reg1) << 2);
+						p.addInstrucao((opcode << 11) | reg1);
 						p.addInstrucao(end);
 						break;
 					//MOV %<reg>, $<const>
 					case '#':
 						opcode = 0b01100;
 						cnst = Integer.parseInt(tokens[2].substring(1));
-						p.addInstrucao(((opcode << 9) | reg1) << 2);
+						p.addInstrucao((opcode << 11) | reg1);
 						p.addInstrucao(cnst);
 						break;
 					default:
@@ -92,7 +92,7 @@ public class Montador {
 					case '%':
 						opcode = 0b01001;
 						reg1 = parseReg(tokens[2]);
-						p.addInstrucao(((opcode << 9) | reg1) << 2);
+						p.addInstrucao((opcode << 11) | reg1);
 						p.addInstrucao(end);
 						break;
 					case '$':
@@ -102,6 +102,8 @@ public class Montador {
 						opcode = 0b01011;
 						cnst = Integer.parseInt(tokens[2].substring(1));
 						p.addInstrucao(opcode << 11);
+						p.addInstrucao(end);
+						p.addInstrucao(cnst);
 						break;
 					default:
 						throw new IllegalArgumentException("Padrão não reconhecido!");
@@ -122,6 +124,8 @@ public class Montador {
 				}
 				if (tokens[1].charAt(0) == '$') {
 					end = Short.parseShort(tokens[1].substring(1));
+					p.addInstrucao(opcode << 11);
+					p.addInstrucao(end);
 				} else {
 					throw new IllegalArgumentException("Operação JMP requer endereço!");
 				}
@@ -134,7 +138,6 @@ public class Montador {
 			case "JNZ":
 			case "JE":
 			case "JNE":
-			case "JNG":
 			case "HLT":
 				opcode = opcodeFluxo(tokens[0]);
 				p.addInstrucao((opcode << 11));
@@ -197,8 +200,6 @@ public class Montador {
 			return 0b00100;
 		case "JNE":
 			return 0b00101;
-		case "JNG":
-			return 0b00110;
 		case "HLT":
 			return 0b00111;
 		default:

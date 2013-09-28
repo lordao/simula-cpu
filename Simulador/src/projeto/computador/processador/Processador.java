@@ -11,7 +11,7 @@ public class Processador {
 	private Ula ula;
 	private UnidadeControle uControle;
 	private Map<Byte, Registrador16> regs;
-	private int enderecoAtual;
+	int enderecoAtual;
 	public static Estado estadoAtual = Estado.SOLICITAR_INSTRUCAO;
 	public static int ciclos = 0;
 
@@ -75,6 +75,7 @@ public class Processador {
 	public void solicitarInstrucao() {
 		leitura(getRegistrador(PC_END));
 		estadoAtual = Estado.BUSCA_INSTRUCAO;
+		enderecoAtual = getRegistrador(PC_END);
 	}
 
 	public void buscarInstrucao() {
@@ -86,22 +87,20 @@ public class Processador {
 		byte opcode = uControle.decodificarInstrucao(getRegistrador(IR_END));
 		if (uControle.getDecoder().isLogicoAritmetica()) {
 			ula.setOperacao(opcode);
-			estadoAtual = Estado.BUSCA_OPERANDO;
+			ula.setOprd1(getRegistrador(uControle.getDecoder().getReg1()));
+			ula.setOprd2(getRegistrador(uControle.getDecoder().getReg2()));
 		}
 		if (uControle.getDecoder().precisaBusca()) {
 			estadoAtual = Estado.BUSCA_OPERANDO;
-			enderecoAtual = getRegistrador(PC_END);
-			leitura(++enderecoAtual);
 		} else {
 			estadoAtual = Estado.EXECUCAO;
-			leitura(++enderecoAtual);
 		}
+		leitura(++enderecoAtual);
 	}
 
 	public void buscarOperando() {
 		if (uControle.getDecoder().isLogicoAritmetica()) {
-			ula.setOprd1( uControle.getDecoder().getReg1());
-			ula.setOprd2( uControle.getDecoder().getReg2());
+			
 			estadoAtual = Estado.EXECUCAO;
 		} else {
 			int oprd = getRegistrador(MBR_END);
@@ -114,26 +113,30 @@ public class Processador {
 	}
 
 	public void executar() {
+		int pc = getRegistrador(PC_END);
 		if (uControle.getDecoder().isLogicoAritmetica()) {
 			int result = ula.executar();
-			guardarResultado(result, uControle.getDecoder().getOpcode());
+			guardarResultado(result, uControle.getDecoder().getReg1(), uControle.getDecoder().getOpcode());
 		} else {
 			uControle.executar();
 		}
-		setPc(enderecoAtual);
+		
+		if (getRegistrador(PC_END) == pc) {
+			setPc(enderecoAtual);
+		}
 		if (estadoAtual != Estado.HALT) {
 			estadoAtual = Estado.SOLICITAR_INSTRUCAO;
 		}
 	}
 
-	private void guardarResultado(int result, byte opcode) {
+	private void guardarResultado(int result, byte reg1, byte opcode) {
 		switch (opcode) {
 		case 0:
 		case 1:
 		case 5:
 		case 6:
 		case 7:
-			setRegistrador(uControle.getDecoder().getReg2(), result);
+			setRegistrador(uControle.getDecoder().getReg1(), result);
 			break;
 		case 2:
 		case 3:
@@ -180,7 +183,6 @@ public class Processador {
 	}
 	
 	void incrementarPc() {
-		int s = getRegistrador(PC_END);
-		setRegistrador(PC_END, ++s);
+		setPc(Processador.getInstance().enderecoAtual + 1);
 	}
 }
