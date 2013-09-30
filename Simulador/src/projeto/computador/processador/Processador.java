@@ -6,6 +6,7 @@ import java.util.Map;
 
 import projeto.computador.Barramento;
 import projeto.computador.Estado;
+import projeto.computador.Representacao;
 
 public class Processador {
 	private Ula ula;
@@ -27,28 +28,32 @@ public class Processador {
 
 	private static Processador instance;
 
-	public static Processador getInstance() {
+	public static Processador criarProcessador(Representacao representacao) {
 		if (instance == null) {
-			instance = new Processador();
+			instance = new Processador(representacao);
 		}
 		return instance;
 	}
+	
+	public static Processador getInstance() {
+		return instance;
+	}
 
-	private Processador() {
+	private Processador(Representacao representacao) {
 		regs = new HashMap<Byte, Registrador16>();
 
-		ula = new Ula();
+		ula = new Ula(representacao);
 		uControle = new UnidadeControle();
 
-		regs.put(MAR_END, new Registrador16("MAR"));
-		regs.put(MBR_END, new Registrador16("MBR"));
-		regs.put(PC_END, new Registrador16("PC"));
-		regs.put(IR_END, new Registrador16("IR"));
+		regs.put(MAR_END, new Registrador16("MAR", representacao));
+		regs.put(MBR_END, new Registrador16("MBR", representacao));
+		regs.put(PC_END, new Registrador16("PC", representacao));
+		regs.put(IR_END, new Registrador16("IR", representacao));
 
-		regs.put(AX_END, new Registrador16("AX"));
-		regs.put(BX_END, new Registrador16("BX"));
-		regs.put(CX_END, new Registrador16("CX"));
-		regs.put(DX_END, new Registrador16("DX"));
+		regs.put(AX_END, new Registrador16("AX", representacao));
+		regs.put(BX_END, new Registrador16("BX", representacao));
+		regs.put(CX_END, new Registrador16("CX", representacao));
+		regs.put(DX_END, new Registrador16("DX", representacao));
 	}
 
 	public void lerBarramentos() {
@@ -188,7 +193,7 @@ public class Processador {
 			sb.append(iter.next()).append('\n');
 		}
 
-		sb.append(ula);
+		sb.append("Estado da ULA: ").append(String.format("%03d", ula.getEstado()));
 		System.out.println(sb.toString());
 	}
 

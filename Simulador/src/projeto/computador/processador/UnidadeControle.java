@@ -78,29 +78,29 @@ class UnidadeControle {
 			
 			
 			switch (decoder.getOpcode()) {
-			//MOV %<reg>, $<end>
-			case 0:
-				p.setRegistrador(r1, end);
-				break;
-			
-			//MOV $<end>, %<reg>
-			case 1:
-				p.escrita(end, val1);
-				break;
-
 			//MOV %<reg>, %<reg>
-			case 2:
+			case 0:
 				p.setRegistrador(r1, val2);
 				break;
+			
+			//MOV %<reg>, $<end>
+			case 1:
+				p.setRegistrador(r1, end);
+				break;
 
-			//MOV $<end>, #<const>
+			//MOV %<reg>, #<const>
+			case 2:
+				p.setRegistrador(r1, dado);
+				break;
+
+			//MOV $<end>, %<reg>
 			case 3:
-				p.escrita(end, dado);
+				p.escrita(end, val1);
 				break;
 				
 			//MOV %<reg>, #<const> 
 			case 4:
-				p.setRegistrador(r1, dado);
+				p.escrita(end, dado);
 				break;
 				
 			//NOP

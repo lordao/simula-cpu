@@ -1,0 +1,7 @@
+MOV %AX, #32
+MOV %BX, %AX
+JMP $7
+NOT %AX      ;Não executa
+ADD %BX, %AX ;Não executa
+XOR %AX, %BX
+HLT

@@ -11,8 +11,32 @@ import projeto.montador.Montador;
 public class Main {
 
 	public static void main(String[] args) {
-  		String programaPath = args[0];
-//		String programaPath = "/tmp/soma.jas";
+  		if (args.length < 1) {
+  			System.err.println("Nenhum parâmetro passado!");
+  			System.out.println("Uso: java -jar simulador.jar <representacao> nomeDoArquivo.jas"
+  					+ "\nRepresentações suportadas: Binária (bin), Decimal* (dec) e Hexadecimal (hex)"
+  					+ "\n*: Comportamento padrão.");
+  			System.exit(1);
+  		}
+  		
+		String programaPath;
+		Representacao r;
+		if (args.length == 1) {
+			programaPath = args[0];
+			r = Representacao.Decimal;
+		} else {
+			switch (args[0]) {
+			case "bin":
+				r = Representacao.Binaria;
+				break;
+			case "hex":
+				r = Representacao.Hexadecimal;
+				break;
+			default:
+				r = Representacao.Decimal;
+			}
+			programaPath = args[1];
+		}
 		Montador m = Montador.getInstance();
 		
 		Programa p = null;
@@ -27,7 +51,7 @@ public class Main {
 		Memoria.gerarMemoria(p);
 		
 		Memoria mem = Memoria.getInstance();
-		Processador cpu = Processador.getInstance();
+		Processador cpu = Processador.criarProcessador(r);
 		Scanner sc = new Scanner(System.in);
 		
 		mainLoop: 

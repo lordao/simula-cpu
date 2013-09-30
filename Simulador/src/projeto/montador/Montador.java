@@ -74,7 +74,7 @@ public class Montador {
 					switch (tokens[2].charAt(0)) {
 					//MOV %<reg>, %<reg>
 					case '%':
-						opcode = 0b01001;
+						opcode = 0b01000;
 						reg2 = parseReg(tokens[2]);
 						instrucao = (((opcode << 8) | reg1) << 2) | reg2;
 						sb.append(numLinha++).append(" - ").append(instrucao);
@@ -82,7 +82,7 @@ public class Montador {
 						break;
 					//MOV %<reg>, $<end>
 					case '$':
-						opcode = 0b01000;
+						opcode = 0b01001;
 						end = Integer.parseInt(tokens[2].substring(1));
 						instrucao = (opcode << 10) | reg1;
 						sb.append(numLinha++).append(" - ").append(instrucao).append("\n")
@@ -92,7 +92,7 @@ public class Montador {
 						break;
 					//MOV %<reg>, $<const>
 					case '#':
-						opcode = 0b01100;
+						opcode = 0b01010;
 						cnst = Integer.parseInt(tokens[2].substring(1));
 						instrucao = (opcode << 10) | reg1;
 						sb.append(numLinha++).append(" - ").append(instrucao).append("\n")
@@ -109,7 +109,7 @@ public class Montador {
 					switch (tokens[2].charAt(0)) {
 					//MOV $<end>, %<reg>
 					case '%':
-						opcode = 0b01001;
+						opcode = 0b01011;
 						reg1 = parseReg(tokens[2]);
 						instrucao = (opcode << 10) | reg1;
 						sb.append(numLinha++).append(" - ").append(instrucao).append("\n")
@@ -121,7 +121,7 @@ public class Montador {
 						throw new IllegalArgumentException("MOV de memória para memória não é suportado!");
 					//MOV $<end>, #<const>
 					case '#':
-						opcode = 0b01011;
+						opcode = 0b01100;
 						cnst = Integer.parseInt(tokens[2].substring(1));
 						instrucao = opcode << 10;
 						sb.append(numLinha++).append(" - ").append(instrucao).append("\n")

@@ -1,5 +1,7 @@
 package projeto.computador.processador;
 
+import projeto.computador.Representacao;
+
 class Ula {	
 	private short oprd1;
 	private short oprd2;
@@ -7,8 +9,8 @@ class Ula {
 	
 	private int opcode;
 	
-	Ula() {
-		regUla = new RegistradorEstado("Registrador de Estado (ULA)");
+	Ula(Representacao representacao) {
+		regUla = new RegistradorEstado("Registrador de Estado (ULA)", representacao);
 	}
 	
 	void setOprd1(short oprd) {

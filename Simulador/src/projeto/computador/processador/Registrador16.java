@@ -1,11 +1,13 @@
 package projeto.computador.processador;
 
+import projeto.computador.Representacao;
+
 
 public class Registrador16 extends Registrador<Short> {
 	private Short palavra;
 	
-	Registrador16(String alias) {
-		super(alias);
+	Registrador16(String alias, Representacao representacao) {
+		super(alias, representacao);
 		palavra = 0;
 	}
 

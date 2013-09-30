@@ -1,0 +1,7 @@
+;AX := 1
+MOV %AX, #1 ;Move valor constante 1 para AX.
+;BX := 10
+MOV %BX, #10 ;Move valor constante 10 para BX.
+;AX := AX + BX
+ADD %AX, %BX
+HLT

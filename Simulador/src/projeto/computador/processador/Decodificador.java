@@ -40,24 +40,26 @@ class Decodificador {
 				//2: Constante
 				//Forma: {_ -> _}, ou MOV {}[1], {}[0]
 				case 0:
-					reg1 = (byte) (instrucao & 0b11);
-					flags = new int[] { 0, 1 };
+					reg1 = (byte) ((instrucao >> 2) & 0b11);
+					reg2 = (byte) (instrucao & 0b11);
+					flags = new int[] { 0, 0 };
+					precisaBusca = false;
 					break;
 				case 1:
 					reg1 = (byte) (instrucao & 0b11);
 					flags = new int[] { 1, 0 };
 					break;
 				case 2:
-					reg1 = (byte) ((instrucao >> 2) & 0b11);
-					reg2 = (byte) (instrucao & 0b11);
-					flags = new int[] { 0, 0 };
+					reg1 = (byte) (instrucao & 0b11);
+					flags = new int[] { 2, 0 };
 					break;
 				case 3:
-					flags = new int[] { 2, 1 };
+					reg1 = (byte) (instrucao & 0b11);
+					flags = new int[] { 0, 1 };
 					break;
 				case 4:
 					reg1 = (byte) (instrucao & 0b11);
-					flags = new int[] { 2, 0 };
+					flags = new int[] { 2, 1 };
 					break;
 				}
 			} else {
