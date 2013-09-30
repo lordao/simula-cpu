@@ -1,0 +1,444 @@
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+% abnTeX2: Modelo de Relatório Técnico/Acadêmico em conformidade com
+% ABNT NBR 10719:2011 Informação e documentação - Relatório técnico e/ou
+% científico - Apresentação
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+
+\documentclass[
+	% -- opções da classe memoir --
+	12pt,				% tamanho da fonte
+%	openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+	oneside,			% para impressão em verso e anverso. Oposto a oneside
+	a4paper,			% tamanho do papel.
+	% -- opções da classe abntex2 --
+	%chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+	%section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+	%subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+	%subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+	% -- opções do pacote babel --
+	english,			% idioma adicional para hifenização
+	french,				% idioma adicional para hifenização
+	spanish,			% idioma adicional para hifenização
+	brazil,				% o último idioma é o principal do documento
+	]{abntex2}
+
+
+% ---
+% PACOTES
+% ---
+
+% ---
+% Pacotes fundamentais
+% ---
+\usepackage{cmap}				% Mapear caracteres especiais no PDF
+\usepackage{lmodern}			% Usa a fonte Latin Modern
+\usepackage[T1]{fontenc}		% Selecao de codigos de fonte.
+\usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
+\usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
+\usepackage{color}				% Controle das cores
+\usepackage{graphicx}			% Inclusão de gráficos
+% ---
+
+% ---
+% Pacotes adicionais, usados no anexo do modelo de folha de identificação
+% ---
+\usepackage{multicol}
+\usepackage{multirow}
+% ---
+
+% ---
+% Pacotes adicionais, usados apenas no âmbito do Modelo Canônico do abnteX2
+% ---
+\usepackage{lipsum}				% para geração de dummy text
+% ---
+
+% ---
+% Pacotes de citações
+% ---
+\usepackage[brazilian,hyperpageref]{backref}	 % Paginas com as citações na bibl
+\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
+
+% ---
+% CONFIGURAÇÕES DE PACOTES
+% ---
+
+% ---
+% Configurações do pacote backref
+% Usado sem a opção hyperpageref de backref
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+% Texto padrão antes do número das páginas
+\renewcommand{\backref}{}
+% Define os textos da citação
+\renewcommand*{\backrefalt}[4]{
+	\ifcase #1 %
+		Nenhuma citação no texto.%
+	\or
+		Citado na página #2.%
+	\else
+		Citado #1 vezes nas páginas #2.%
+	\fi}%
+% ---
+
+% ---
+% Informações de dados para CAPA e FOLHA DE ROSTO
+% ---
+\titulo{Relatório Final}
+\autor{Saulo Lordão Andrade Barros}
+\local{São Cristóvão, Sergipe}
+\data{2013}
+\instituicao{%
+  Universidade Federal de Sergipe -- UFS
+  \par
+  Departamento de Computação
+  \par
+  Ciência da Computação
+}
+\tipotrabalho{Relatório técnico}
+% O preambulo deve conter o tipo do trabalho, o objetivo,
+% o nome da instituição e a área de concentração
+\preambulo{Relatório final referente ao desenvolvimento de um simulador de
+processador, como última nota da disciplina de Arquitetura de Computadores no
+curso de Graduação em Ciência da Computação.
+}
+% ---
+
+% ---
+% Configurações de aparência do PDF final
+
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+
+% informações do PDF
+\makeatletter
+\hypersetup{
+		%pagebackref=true,
+		pdftitle={\@title},
+		pdfauthor={\@author},
+		pdfsubject={\imprimirpreambulo},
+		pdfcreator={LaTeX with abnTeX2},
+		pdfkeywords={abnt}{latex}{abntex}{abntex2}{relatório técnico},
+		colorlinks=true,			% false: boxed links; true: colored links
+		linkcolor=blue,				% color of internal links
+		citecolor=blue,				% color of links to bibliography
+		filecolor=magenta,				% color of file links
+		urlcolor=blue,
+		bookmarksdepth=4
+}
+\makeatother
+% ---
+
+% ---
+% Espaçamentos entre linhas e parágrafos
+% ---
+
+% O tamanho do parágrafo é dado por:
+\setlength{\parindent}{1.3cm}
+
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+% ---
+% compila o indice
+% ---
+\makeindex
+% ---
+
+% ----
+% Início do documento
+% ----
+\begin{document}
+
+% Retira espaço extra obsoleto entre as frases.
+\frenchspacing
+
+% ----------------------------------------------------------
+% ELEMENTOS PRÉ-TEXTUAIS
+% ----------------------------------------------------------
+% \pretextual
+
+% ---
+% Capa
+% ---
+\imprimircapa
+% ---
+
+% ---
+% Folha de rosto
+% (o * indica que haverá a ficha bibliográfica)
+% ---
+\imprimirfolhaderosto*
+% ---
+
+% ---
+% Anverso da folha de rosto:
+% ---
+
+{
+%\ABNTEXchapterfont
+
+%\vspace*{\fill}
+
+%Conforme a ABNT NBR 10719:2011, seção 4.2.1.1.1, o anverso da folha de rosto
+%deve conter:
+
+%\begin{alineas}
+%  \item nome do órgão ou entidade responsável que solicitou ou gerou o
+%   relatório;
+%  \item título do projeto, programa ou plano que o relatório está relacionado;
+%  \item título do relatório;
+%  \item subtítulo, se houver, deve ser precedido de dois pontos, evidenciando a
+%   sua subordinação ao título. O relatório em vários volumes deve ter um título
+%   geral. Além deste, cada volume pode ter um título específico;
+%  \item número do volume, se houver mais de um, deve constar em cada folha de
+%   rosto a especificação do respectivo volume, em algarismo arábico;
+%  \item código de identificação, se houver, recomenda-se que seja formado
+%   pela sigla da instituição, indicação da categoria do relatório, data,
+%   indicação do assunto e número sequencial do relatório na série;
+%  \item classificação de segurança. Todos os órgãos, privados ou públicos, que
+%   desenvolvam pesquisa de interesse nacional de conteúdo sigiloso, devem
+%    informar a classificação adequada, conforme a legislação em vigor;
+%  \item nome do autor ou autor-entidade. O título e a qualificação ou a função
+%   do autor podem ser incluídos, pois servem para indicar sua autoridade no
+%   assunto. Caso a instituição que solicitou o relatório seja a mesma que o
+%   gerou, suprime-se o nome da instituição no campo de autoria;
+%  \item local (cidade) da instituição responsável e/ou solicitante; NOTA: No
+%   caso de cidades homônimas, recomenda-se o acréscimo da sigla da unidade da
+%   federação.
+%  \item ano de publicação, de acordo com o calendário universal (gregoriano),
+%  deve ser apresentado em algarismos arábicos.
+%\end{alineas}
+
+%\vspace*{\fill}
+%}
+
+% ---
+% Agradecimentos
+% ---
+%\begin{agradecimentos}
+%O agradecimento principal é direcionado a Youssef Cherem, autor do
+%\nameref{formulado-identificacao} (\autopageref{formulado-identificacao}).
+
+%Os agradecimentos especiais são direcionados ao Centro de Pesquisa em
+%Arquitetura da Informação\footnote{\url{http://www.cpai.unb.br/}} da Universidade de
+%Brasília (CPAI), ao grupo de usuários
+%\emph{latex-br}\footnote{\url{http://groups.google.com/group/latex-br}} e aos
+%novos voluntários do grupo
+%\emph{\abnTeX}\footnote{\url{http://groups.google.com/group/abntex2} e
+%\url{http://abntex2.googlecode.com/}}~que contribuíram e que ainda
+%contribuirão para a evolução do abn\TeX.
+
+%\end{agradecimentos}
+% ---
+
+% ---
+% RESUMO
+% ---
+
+% resumo na língua vernácula (obrigatório)
+\setlength{\absparsep}{18pt} % ajusta o espaçamento dos parágrafos do resumo
+\begin{resumo}
+ Segundo a \citeonline[3.1-3.2]{NBR6028:2003}, o resumo deve ressaltar o
+ objetivo, o método, os resultados e as conclusões do documento. A ordem e a extensão
+ destes itens dependem do tipo de resumo (informativo ou indicativo) e do
+ tratamento que cada item recebe no documento original. O resumo deve ser
+ precedido da referência do documento, com exceção do resumo inserido no
+ próprio documento. (\ldots) As palavras-chave devem figurar logo abaixo do
+ resumo, antecedidas da expressão Palavras-chave:, separadas entre si por
+ ponto e finalizadas também por ponto.
+
+ \noindent
+ \textbf{Palavras-chaves}: arquitetura de computadores. simulador de processador.
+\end{resumo}
+% ---
+
+% ---
+% inserir lista de ilustrações
+% ---
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+% ---
+
+% ---
+% inserir lista de tabelas
+% ---
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+% ---
+
+% ---
+% inserir lista de abreviaturas e siglas
+% ---
+\begin{siglas}
+  \item[Fig.] Area of the $i^{th}$ component
+  \item[456] Isto é um número
+  \item[123] Isto é outro número
+  \item[lauro cesar] este é o meu nome
+\end{siglas}
+% ---
+
+% ---
+% inserir lista de símbolos
+% ---
+\begin{simbolos}
+  \item[$ \Gamma $] Letra grega Gama
+  \item[$ \Lambda $] Lambda
+  \item[$ \zeta $] Letra grega minúscula zeta
+  \item[$ \in $] Pertence
+\end{simbolos}
+% ---
+
+% ---
+% inserir o sumario
+% ---
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+% ---
+
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+
+% ----------------------------------------------------------
+% Introdução
+% ----------------------------------------------------------
+\chapter*[Introdução]{Introdução}
+\addcontentsline{toc}{chapter}{Introdução}
+
+
+
+% ----------------------------------------------------------
+% PARTE - preparação da pesquisa
+% ----------------------------------------------------------
+\chapter[Planejamento do Simulador]{Planejamento do simulador}
+\section{Pré-Projeto}
+
+\section{Unidades do sistema}
+
+	\subsection{Memória}
+	A memória do sistema utiliza palavras de 16 bits, armazenando tanto números
+	positivos quanto números negativos (a partir do complemento de dois). Há
+	capacidade para 32768 palavras de 16 bits, totalizando 512KiB de memória.
+
+	\subsection{Barramentos}
+	Há três barramentos: Controle, Dados e Endereço. Toda a comunicação entre
+	Processador e Memória é feita através destes três barramentos.
+
+	\subsection{Processador}
+		\subsubsection{Registradores}
+		O processador possui 8 registradores de 16 bits, sendo que quatro
+		destes são acessíveis ao programador. São eles:
+		\begin{alineas}
+			\item
+				AX
+			\item
+				BX
+			\item
+				CX
+			\item
+				DX
+			\item
+				PC
+			\item
+				IR
+			\item
+				MAR
+			\item
+				MBR
+		\end{alineas}
+
+		\subsubsection{Unidade de Controle de Fluxo e de Movimento de Dados}
+		\subsubsection{Decodificador}
+		\subsubsection{ULA}
+
+
+\section{Instruções}
+
+% ----------------------------------------------------------
+% Capitulo com exemplos de comandos inseridos de arquivo externo
+% ----------------------------------------------------------
+
+
+
+
+% ---
+% Finaliza a parte no bookmark do PDF, para que se inicie o bookmark na raiz
+% ---
+\bookmarksetup{startatroot}%
+% ---
+
+% ---
+% Conclusão
+% ---
+\chapter*[Conclusão]{Conclusão}
+\addcontentsline{toc}{chapter}{Conclusão}
+
+% ----------------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS
+% ----------------------------------------------------------
+\postextual
+
+% ----------------------------------------------------------
+% Referências bibliográficas
+% ----------------------------------------------------------
+\bibliography{abntex2-modelo-references}
+
+% ----------------------------------------------------------
+% Glossário
+% ----------------------------------------------------------
+%
+% Consulte o manual da classe abntex2 para orientações sobre o glossário.
+%
+%\glossary
+
+% ----------------------------------------------------------
+% Apêndices
+% ----------------------------------------------------------
+
+% ---
+% Inicia os apêndices
+% ---
+%\begin{apendicesenv}
+
+% Imprime uma página indicando o início dos apêndices
+%\partapendices
+
+% ----------------------------------------------------------
+%\chapter{Quisque libero justo}
+% ----------------------------------------------------------
+
+
+%\end{apendicesenv}
+% ---
+
+
+% ----------------------------------------------------------
+% Anexos
+% ----------------------------------------------------------
+
+% ---
+% Inicia os anexos
+% ---
+%\begin{anexosenv}
+
+% Imprime uma página indicando o início dos anexos
+%\partanexos
+
+
+
+%\end{anexosenv}
+
+%---------------------------------------------------------------------
+% INDICE REMISSIVO
+%---------------------------------------------------------------------
+
+\printindex
+
+
+\end{document}

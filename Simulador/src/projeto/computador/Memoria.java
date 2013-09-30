@@ -39,6 +39,9 @@ public class Memoria {
         short controle = Barramento.getBarramentoControle().ler();
         
         short endereco = Barramento.getBarramentoEndereco().ler();
+        if (endereco < 0) {
+        	endereco *= -1;
+        }
         if (controle == Barramento.SINAL_ESCRITA) {
         	short dado = Barramento.getBarramentoDados().ler();
         	mem[endereco] = dado;

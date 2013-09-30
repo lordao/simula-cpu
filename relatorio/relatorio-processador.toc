@@ -1,0 +1,15 @@
+\changetocdepth {3}
+\select@language {brazil}
+\contentsline {chapter}{Introdu\IeC {\c c}\IeC {\~a}o}{8}{chapter*.7}
+\contentsline {chapter}{\chapternumberline {1}Planejamento do Simulador}{9}{chapter.1}
+\contentsline {section}{\numberline {1.1}Pr\IeC {\'e}-Projeto}{9}{section.1.1}
+\contentsline {section}{\numberline {1.2}Unidades do sistema}{9}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}Mem\IeC {\'o}ria}{9}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.2}Barramentos}{9}{subsection.1.2.2}
+\contentsline {subsection}{\numberline {1.2.3}Processador}{9}{subsection.1.2.3}
+\contentsline {subsubsection}{\numberline {1.2.3.1}Registradores}{9}{subsubsection.1.2.3.1}
+\contentsline {subsubsection}{\numberline {1.2.3.2}Unidade de Controle de Fluxo e de Movimento de Dados}{10}{subsubsection.1.2.3.2}
+\contentsline {subsubsection}{\numberline {1.2.3.3}Decodificador}{10}{subsubsection.1.2.3.3}
+\contentsline {subsubsection}{\numberline {1.2.3.4}ULA}{10}{subsubsection.1.2.3.4}
+\contentsline {section}{\numberline {1.3}Instru\IeC {\c c}\IeC {\~o}es}{10}{section.1.3}
+\contentsline {chapter}{Conclus\IeC {\~a}o}{11}{chapter*.8}
