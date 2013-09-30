@@ -15,10 +15,10 @@ public class Memoria {
     
     private Memoria(Programa p) {
     	this();
-    	int i = 0;
+    	int i = -1;
     	Iterator<Short> iter = p.iterador();
     	while (iter.hasNext()) {
-    		mem[i++] = iter.next();
+    		mem[++i] = iter.next();
     	}
     }
     

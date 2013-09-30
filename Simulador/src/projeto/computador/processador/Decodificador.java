@@ -24,16 +24,16 @@ class Decodificador {
 	}
 
 	private void parse(int instrucao) {
-		logicoAritmetica = instrucao >>> 15 == 1;
+		logicoAritmetica = instrucao >> 14 == 1;
 		if (logicoAritmetica) {
-			opcode = (byte) ((instrucao >>> 10) & 0b111);
+			opcode = (byte) ((instrucao >> 9) & 0b111);
 			reg1 = (byte) ((instrucao >> 2) & 0b11);
 			reg2 = (byte) (instrucao & 0b11);
 		} else {
-			isMov = ((instrucao >>> 14) & 0b11) == 1;
+			isMov = ((instrucao >> 13) & 0b11) == 1;
 			if (isMov) {
 				precisaBusca = true;
-				opcode = (byte) ((instrucao >>> 11) & 0b111);
+				opcode = (byte) ((instrucao >> 10) & 0b111);
 				switch (opcode) {
 				//0: Registrador
 				//1: Memória
@@ -61,7 +61,7 @@ class Decodificador {
 					break;
 				}
 			} else {
-				opcode = (byte) ((instrucao >>> 11) & 0b111);
+				opcode = (byte) ((instrucao >> 10) & 0b111);
 				if (opcode == 1) {
 					precisaBusca = true;
 					flags = new int[] { 0 };

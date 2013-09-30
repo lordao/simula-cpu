@@ -10,7 +10,10 @@ import projeto.computador.processador.Processador;
 public class Montador {
 	private static Montador instance = null;
 
+	private StringBuilder sb;
+	
 	private Montador() {
+		sb = new StringBuilder();
 	}
 
 	public static Montador getInstance() {
@@ -23,8 +26,9 @@ public class Montador {
 	public Programa parseFromFile(String filepath) throws IOException {
 		FileReader r = new FileReader(filepath);
 		BufferedReader leitor = new BufferedReader(r);
-		String linha = leitor.readLine();;
+		String linha = leitor.readLine();
 		Programa p = new Programa();
+		int numLinha = 0;
 		loop:
 		while (linha != null) {	
 			if (linha.isEmpty() || linha.charAt(0) == ';') {
@@ -32,7 +36,7 @@ public class Montador {
 				continue loop;
 			}
 			byte opcode, reg1, reg2;
-			int end, cnst;
+			int end, cnst, instrucao;
 			
 			String[] tokens = linha.split(" ");
 			switch (tokens[0]) {
@@ -45,12 +49,19 @@ public class Montador {
 			case "OR":
 			case "XOR":
 				opcode = opcodeLA(tokens[0]);
-				if (tokens.length < 3) {
+				if (!"NOT".equals(tokens[0]) && tokens.length < 3) {
 					throw new IllegalArgumentException("Padrão não reconhecido!");
 				}
 				reg1 = parseReg(tokens[1]);
-				reg2 = parseReg(tokens[2]);
-				p.addInstrucao((((opcode << 8) | reg1) << 2) | reg2);
+				if (!"NOT".equals(tokens[0])) {
+					reg2 = parseReg(tokens[2]);
+					instrucao = (((opcode << 7) | reg1) << 2) | reg2;
+					
+				} else {
+					instrucao = (opcode << 9) | reg1;
+				}
+				sb.append(numLinha++).append(" - ").append(instrucao);
+				p.addInstrucao(instrucao);
 				if (tokens.length > 3) {
 					System.out.println("Ignorando resto da linha...");
 				}
@@ -65,20 +76,28 @@ public class Montador {
 					case '%':
 						opcode = 0b01001;
 						reg2 = parseReg(tokens[2]);
-						p.addInstrucao((((opcode << 9) | reg1) << 2) | reg2);
+						instrucao = (((opcode << 8) | reg1) << 2) | reg2;
+						sb.append(numLinha++).append(" - ").append(instrucao);
+						p.addInstrucao(instrucao);
 						break;
 					//MOV %<reg>, $<end>
 					case '$':
 						opcode = 0b01000;
 						end = Integer.parseInt(tokens[2].substring(1));
-						p.addInstrucao((opcode << 11) | reg1);
+						instrucao = (opcode << 10) | reg1;
+						sb.append(numLinha++).append(" - ").append(instrucao).append("\n")
+						  .append(numLinha++).append(" - ").append(end);
+						p.addInstrucao(instrucao);
 						p.addInstrucao(end);
 						break;
 					//MOV %<reg>, $<const>
 					case '#':
 						opcode = 0b01100;
 						cnst = Integer.parseInt(tokens[2].substring(1));
-						p.addInstrucao((opcode << 11) | reg1);
+						instrucao = (opcode << 10) | reg1;
+						sb.append(numLinha++).append(" - ").append(instrucao).append("\n")
+						  .append(numLinha++).append(" - ").append(cnst);
+						p.addInstrucao(instrucao);
 						p.addInstrucao(cnst);
 						break;
 					default:
@@ -92,7 +111,10 @@ public class Montador {
 					case '%':
 						opcode = 0b01001;
 						reg1 = parseReg(tokens[2]);
-						p.addInstrucao((opcode << 11) | reg1);
+						instrucao = (opcode << 10) | reg1;
+						sb.append(numLinha++).append(" - ").append(instrucao).append("\n")
+						  .append(numLinha++).append(" - ").append(end);
+						p.addInstrucao(instrucao);
 						p.addInstrucao(end);
 						break;
 					case '$':
@@ -101,7 +123,11 @@ public class Montador {
 					case '#':
 						opcode = 0b01011;
 						cnst = Integer.parseInt(tokens[2].substring(1));
-						p.addInstrucao(opcode << 11);
+						instrucao = opcode << 10;
+						sb.append(numLinha++).append(" - ").append(instrucao).append("\n")
+						  .append(numLinha++).append(" - ").append(end).append("\n")
+						  .append(numLinha++).append(" - ").append(cnst);
+						p.addInstrucao(instrucao);
 						p.addInstrucao(end);
 						p.addInstrucao(cnst);
 						break;
@@ -124,7 +150,10 @@ public class Montador {
 				}
 				if (tokens[1].charAt(0) == '$') {
 					end = Short.parseShort(tokens[1].substring(1));
-					p.addInstrucao(opcode << 11);
+					instrucao = opcode << 10;
+					sb.append(numLinha++).append(" - ").append(instrucao).append("\n")
+					  .append(numLinha++).append(" - ").append(end);
+					p.addInstrucao(instrucao);
 					p.addInstrucao(end);
 				} else {
 					throw new IllegalArgumentException("Operação JMP requer endereço!");
@@ -141,13 +170,19 @@ public class Montador {
 			case "JNG":
 			case "HLT":
 				opcode = opcodeFluxo(tokens[0]);
-				p.addInstrucao((opcode << 11));
+				instrucao = (opcode << 10);
+				sb.append(numLinha++).append(" - ").append(instrucao);
+				p.addInstrucao(instrucao);
 				break;
 			default:
 				throw new IllegalArgumentException("Padrão não reconhecido!");
 			}
+			sb.append("\n");
 			linha = leitor.readLine();
 		}
+		p.setPreProcessedCode(sb.toString());
+		
+		leitor.close();
 		return p;
 	}
 

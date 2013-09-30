@@ -1,7 +1,8 @@
 package projeto.computador;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Scanner;
 
 import projeto.computador.processador.Processador;
@@ -10,22 +11,19 @@ import projeto.montador.Montador;
 public class Main {
 
 	public static void main(String[] args) {
-//  		String programaPath = args[0];
-		String programaPath = "/tmp/soma.jas";
+  		String programaPath = args[0];
+//		String programaPath = "/tmp/soma.jas";
 		Montador m = Montador.getInstance();
 		
 		Programa p = null;
 		try {
 			p = m.parseFromFile(programaPath);
+			writePreProcessedCode(programaPath, p);
 		} catch (IOException io) {
 			System.err.println(io.getMessage());
 			io.printStackTrace();
 			System.exit(1);
 		}
-//		p.addInstrucao(0b0000100000000000);
-//		p.addInstrucao(3);
-//		p.addInstrucao(16);
-//		p.addInstrucao(0b0011100000000000);
 		Memoria.gerarMemoria(p);
 		
 		Memoria mem = Memoria.getInstance();
@@ -34,9 +32,9 @@ public class Main {
 		
 		mainLoop: 
 		while (true) {
-			System.out.printf("Ciclo %d - %s\n", Processador.ciclos, Processador.estadoAtual.toString());
+			System.out.printf("Ciclo %d - %s\n", cpu.getCiclos(), cpu.getEstadoAtual().toString());
 			cpu.lerBarramentos();
-			switch (Processador.estadoAtual) {
+			switch (cpu.getEstadoAtual()) {
 			case SOLICITAR_INSTRUCAO:
 				cpu.solicitarInstrucao();
 				break;
@@ -57,11 +55,22 @@ public class Main {
 			}
 			cpu.escreverBarramentos();
 			mem.ciclo();
-			Processador.ciclos++;
-			
-			cpu.show();
-//			sc.nextLine();
+			cpu.encerrarCiclo();
+
+			sc.nextLine();
 		}
 		sc.close();
+	}
+
+	private static void writePreProcessedCode(String path, Programa p) throws IOException {
+		StringBuilder b = new StringBuilder(path);
+		b.replace(b.lastIndexOf("."), b.length(), ".jo");
+		
+		FileWriter w = new FileWriter(b.toString());
+		BufferedWriter writer = new BufferedWriter(w);
+		writer.write(p.getPreProcessedCode());
+		
+		writer.close();
+		w.close();
 	}
 }

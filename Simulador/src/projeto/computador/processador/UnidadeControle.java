@@ -1,8 +1,6 @@
 package projeto.computador.processador;
 
-import projeto.computador.Barramento;
 import projeto.computador.Estado;
-import projeto.computador.Main;
 
 class UnidadeControle {
 	private Decodificador decoder;
@@ -41,13 +39,12 @@ class UnidadeControle {
 				}
 				return true;
 			case 2:
-				if (decoder.getDado() == null) {
-					decoder.setDado(oprd);
-					return false;
-				}
 				if (flags[1] == 1 && decoder.getEnd1() == null) {
 					decoder.setEnd1(oprd);
 					return false;
+				}
+				if (decoder.getDado() == null) {
+					decoder.setDado(oprd);
 				}
 				return true;
 			}
@@ -125,35 +122,35 @@ class UnidadeControle {
 		// JZ
 		case 2:
 			if ((p.getEstadoUla() & 1) == 1) {
-				p.incrementarPc();
+				p.pularPc();
 			}
 			break;
 		// JNZ
 		case 3:
 			if ((p.getEstadoUla() & 1) == 0) {
-				p.incrementarPc();
+				p.pularPc();
 			}
 			break;
 		// JE
 		case 4:
 			if (((p.getEstadoUla() >> 2) & 1) == 1) {
-				p.incrementarPc();
+				p.pularPc();
 			}
 			break;
 		// JNE
 		case 5:
 			if (((p.getEstadoUla() >> 2) & 1) == 0) {
-				p.incrementarPc();
+				p.pularPc();
 			}
 			break;
 		// JNG
 		case 6:
 			if (((p.getEstadoUla() >> 1) & 1) == 1) {
-				p.incrementarPc();
+				p.pularPc();
 			}
 			break;
 		case 7:
-			Processador.estadoAtual = Estado.HALT;
+			Processador.getInstance().estadoAtual = Estado.HALT;
 			break;
 		}
 	}

@@ -56,7 +56,7 @@ class Ula {
 			break;
 		}
 		
-		int zero     = 1 & result,
+		int zero     = result == 0 ? 1 : 0,
 			negativo = result >>> 31,
 			igual    = oprd1 == oprd2 ? 1 : 0;
 		//INZ

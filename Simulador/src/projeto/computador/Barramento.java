@@ -33,7 +33,7 @@ public class Barramento {
             this.sinal = (short) (palavra & 1);
             break;
         default:
-        	short tmp = (short) (palavra & (Memoria.TAMANHO_PALAVRA-1));
+        	short tmp = (short) (palavra & Memoria.TAMANHO_PALAVRA);
             this.sinal = tmp;
         }
     }

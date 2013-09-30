@@ -12,8 +12,8 @@ public class Processador {
 	private UnidadeControle uControle;
 	private Map<Byte, Registrador16> regs;
 	short enderecoAtual;
-	public static Estado estadoAtual = Estado.SOLICITAR_INSTRUCAO;
-	public static int ciclos = 0;
+	Estado estadoAtual = Estado.SOLICITAR_INSTRUCAO;
+	private int ciclos = 0;
 
 	public static final byte AX_END = 0b00;
 	public static final byte BX_END = 0b01;
@@ -92,10 +92,10 @@ public class Processador {
 		}
 		if (uControle.getDecoder().precisaBusca()) {
 			estadoAtual = Estado.BUSCA_OPERANDO;
+			leitura(++enderecoAtual);
 		} else {
 			estadoAtual = Estado.EXECUCAO;
 		}
-		leitura(++enderecoAtual);
 	}
 
 	public void buscarOperando() {
@@ -122,7 +122,7 @@ public class Processador {
 		}
 		
 		if (getRegistrador(PC_END) == pc) {
-			setPc(enderecoAtual);
+			setPc(++enderecoAtual);
 		}
 		if (estadoAtual != Estado.HALT) {
 			estadoAtual = Estado.SOLICITAR_INSTRUCAO;
@@ -141,8 +141,11 @@ public class Processador {
 			break;
 		case 2:
 		case 3:
-			short cx =  (short) (result >>> 16),
-			dx =  (short) result;
+			short cx =  (short) ((result >>> 16) & 0xFFFF),
+			dx =  (short) (result & ((0 << 32) | (0xFFFF)));
+			System.out.printf("cx: %d\ndx: %d\n", cx, dx);
+			System.out.println((cx << 16) | dx);
+			System.exit(1);
 			setRegistrador(CX_END, cx);
 			setRegistrador(DX_END, dx);
 			break;
@@ -164,9 +167,22 @@ public class Processador {
 	byte getEstadoUla() {
 		return ula.getEstado();
 	}
+	
+	public Estado getEstadoAtual() {
+		return estadoAtual;
+	}
 
-	public void show() {
-		Iterator iter = regs.values().iterator();
+	public int getCiclos() {
+		return ciclos;
+	}
+	
+	public void encerrarCiclo() {
+		ciclos++;
+		mostrarStatus();
+	}
+
+	private void mostrarStatus() {
+		Iterator<Registrador16> iter = regs.values().iterator();
 		StringBuilder sb = new StringBuilder();
 		while (iter.hasNext()) {
 			sb.append(iter.next()).append('\n');
@@ -180,7 +196,7 @@ public class Processador {
 		setRegistrador(PC_END, enderecoAtual);
 	}
 	
-	void incrementarPc() {
-		setPc((short) (enderecoAtual + 1));
+	void pularPc() {
+		setPc((short) (enderecoAtual + 2));
 	}
 }
