@@ -252,9 +252,9 @@ curso de Graduação em Ciência da Computação.
 % ---
 % inserir lista de ilustrações
 % ---
-\pdfbookmark[0]{\listfigurename}{lof}
-\listoffigures*
-\cleardoublepage
+%\pdfbookmark[0]{\listfigurename}{lof}
+%\listoffigures*
+%\cleardoublepage
 % ---
 
 % ---
@@ -334,6 +334,12 @@ instruções e no funcionamento de algumas.
 
 \section{Unidades do sistema}
 
+\begin{figure}[htb]
+ \label{fig:diagrama-blocos}
+ \centering
+ \includegraphics[scale=0.5]{processador.png}
+ \legend{Fonte: Adaptado de \cite{monteiro01}}
+\end{figure}
 	\subsection{Memória}
 	A memória do sistema utiliza palavras de 16 bits, armazenando tanto números
 	positivos quanto números negativos (a partir do complemento de dois). Há
@@ -378,59 +384,83 @@ instruções e no funcionamento de algumas.
 		\subsubsection{ULA}
 		Responsável por todas as operações lógico-aritméticas. Possui um
 		registrador de estado, que armazena os estados "Operandos Iguais",
-		"Resultado Negativo" e "Resultado Zero".
+		"Resultado Negativo"~ e "Resultado Zero".
 
 
 \section{Instruções}
-A implementação da
+Devido a restrições da linguagem (ausência de tipos sem sinal), o bit mais
+significativo não foi utilizado para a definição das instruções, utilizando
+sempre o \textit{bit}~imediatamente após o \textit{bit}~de sinal. A construção
+das instruções se deu da seguinte forma: O primeiro bit utilizado serve como
+\textit{flag}, informando se é instrução lógico-aritmética ou de controle de
+fluxo ou de movimento de dados.
 
-\begin{tabular}{|c|c|c|}
-\hline
+No caso de instruções lógico-aritméticas, os dois \textit{bits}~seguintes
+indicam se o operando correspondente será um registrador ou um endereço de
+memória. Neste simulador só foi implementado o uso de registradores, com estes
+dois \textit{bits}~de \textit{flag}~sendo mantidos apenas para facilitar a
+implementação desta funcionalidade em outro momento.
+
+Quando a instrução não for lógico-aritmética, o segundo \textit{bit}~indicará se a
+instrução é um tipo de MOV. Os três \textit{bits}~restantes indicarão a instrução de
+fato.
+
+\begin{table}[htb]
+\IBGEtab{%
+	\caption{Instruções do processador CPU(12237514)}
+	\label{tabela-instrucoes}
+}{%
+\begin{tabular}{ccc}
+\toprule
 Código & Mnemônico & Funcionamento \\
-\hline
+\midrule \midrule
 000000 & ADD \%AX, \%BX & AX := AX + BX \\
-\hline
+\midrule
 000001 & SUB \%AX, \%BX & AX := AX - BX \\
-\hline
+\midrule
 000010 & MUL \%AX, \%BX & CX:DX := AX * BX\\
-\hline
+\midrule
 000011 & DIV \%AX, \%BX & CX:DX := AX / BX \\
-\hline
+\midrule
 000100 & NOT \%AX &  AX := ~AX \\
-\hline
+\midrule
 000101 & AND \%AX, \%BX & AX := AX \& BX\\
-\hline
+\midrule
 000110 & OR \%AX, \%BX & AX := AX | BX \\
-\hline
+\midrule
 000111 & XOR \%AX, \%BX & AX \^ BX \\
-\hline
-00000 & NOP & Consome um ciclo de clock. \\
-\hline
+\midrule
+00000 & NOP & Consome um ciclo de \textit{clock}. \\
+\midrule
 00001 & JMP \$<end> & PC := <end> \\
-\hline
-00010 & JZ & se ULA.estadoVazio() então PC := PC + 2 \\
-\hline
-00011 & JNZ & se não ULA.estadoVazio() então PC := PC + 2 \\
-\hline
-00100 & JE & se ULA.operandosIguais() então PC := PC + 2 \\
-\hline
-00101 & JNE & se não ULA.operandosIguais() então PC := PC + 2 \\
-\hline
-00110 & JNG & se ULA.resultadoNegativo() então PC := PC + 2 \\
-\hline
+\midrule
+00010 & JZ & se ULA.estadoVazio(): PC := PC + 2 \\
+\midrule
+00011 & JNZ & se não ULA.estadoVazio(): PC := PC + 2 \\
+\midrule
+00100 & JE & se ULA.operandosIguais(): PC := PC + 2 \\
+\midrule
+00101 & JNE & se não ULA.operandosIguais(): PC := PC + 2 \\
+\midrule
+00110 & JNG & se ULA.resultadoNegativo(): PC := PC + 2 \\
+\midrule
 00111 & HLT & Encerra o simulador \\
-\hline
+\midrule
 01000 & MOV \%AX, \%BX & AX := BX \\
-\hline
+\midrule
 01001 & MOV \%AX, \$<end> & AX := Memoria[<end>] \\
-\hline
+\midrule
 01010 & MOV \%AX, \#<valor> & AX := <valor> \\
-\hline
+\midrule
 01011 & MOV \$<end>, \%AX & Memoria[<end>] := AX \\
-\hline
+\midrule
 01100 & MOV \$<end>, \#<valor> & Memoria[<end>] := <valor> \\
-\hline
-\end{tabular}
+\bottomrule
+\end{tabular}%
+}{%
+	\fonte{Produzido pelos autores.}%
+}
+\end{table}
 
 \section{Implementação}
 O Simula-CPU foi desenvolvido na linguagem de programação Java. Para
@@ -442,9 +472,14 @@ Objetos.
 Os barramentos foram implementados como objetos Singleton, possuindo apenas um
 barramento de cada tipo, acessíveis através de métodos estáticos. Estratégias
 similares foram usadas nas classes de Memória e Processador. É importante notar
-que todas as unidades internas ao processador não são vistas fora do "pacote"
+que todas as unidades internas ao processador não são vistas fora do "pacote"~
 onde estão, encapsulando o funcionamento destas.
 
+Para facilitar o teste do Simula-CPU, há um tradutor de uma linguagem Assembly
+para inteiros, de forma que o processador possa entender o programa escrito.
+Este tradutor é responsável também por montar o programa para a memória. Dadas
+as funções, esta estrutura foi chamada de Montador, estando em sua própria
+classe.
 
 % ----------------------------------------------------------
 % Capitulo com exemplos de comandos inseridos de arquivo externo
@@ -464,6 +499,11 @@ onde estão, encapsulando o funcionamento destas.
 % ---
 \chapter*[Conclusão]{Conclusão}
 \addcontentsline{toc}{chapter}{Conclusão}
+Ao final deste trabalho, foi possível projetar um simples processador e
+implementar um simulador do mesmo. O entendimento do funcionamento de um
+processador foi atingido, sendo este o objetivo da disciplina. A experiência
+foi enriquecedora ao fornecer uma visão de hardware como algo possível de ser
+implementado de fato como software.
 
 % ----------------------------------------------------------
 % ELEMENTOS PÓS-TEXTUAIS
@@ -473,7 +513,7 @@ onde estão, encapsulando o funcionamento destas.
 % ----------------------------------------------------------
 % Referências bibliográficas
 % ----------------------------------------------------------
-\bibliography{abntex2-modelo-references}
+\bibliography{ref}
 
 % ----------------------------------------------------------
 % Glossário
