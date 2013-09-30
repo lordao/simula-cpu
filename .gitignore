@@ -2,5 +2,17 @@
 
 # Package Files #
 *.jar
+*.jardesc
 *.war
 *.ear
+
+# LaTeX files
+*.aux
+*.lot
+*.log
+*.lof
+*.bbl
+*.idx
+*.blg
+*.brf
+*.toc
