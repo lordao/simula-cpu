@@ -239,14 +239,10 @@ curso de Graduação em Ciência da Computação.
 % resumo na língua vernácula (obrigatório)
 \setlength{\absparsep}{18pt} % ajusta o espaçamento dos parágrafos do resumo
 \begin{resumo}
- Segundo a \citeonline[3.1-3.2]{NBR6028:2003}, o resumo deve ressaltar o
- objetivo, o método, os resultados e as conclusões do documento. A ordem e a extensão
- destes itens dependem do tipo de resumo (informativo ou indicativo) e do
- tratamento que cada item recebe no documento original. O resumo deve ser
- precedido da referência do documento, com exceção do resumo inserido no
- próprio documento. (\ldots) As palavras-chave devem figurar logo abaixo do
- resumo, antecedidas da expressão Palavras-chave:, separadas entre si por
- ponto e finalizadas também por ponto.
+ O domínio dos conceitos de Arquitetura de Computadores é crucial para a
+ formação de um Cientista da Computação. Com este trabalho objetiva-se melhorar
+ o entendimento do aluno sobre o funcionamento de um processador além de
+ introduzi-lo a um projeto de uma arquitetura de processador.
 
  \noindent
  \textbf{Palavras-chaves}: arquitetura de computadores. simulador de processador.
@@ -272,23 +268,23 @@ curso de Graduação em Ciência da Computação.
 % ---
 % inserir lista de abreviaturas e siglas
 % ---
-\begin{siglas}
-  \item[Fig.] Area of the $i^{th}$ component
-  \item[456] Isto é um número
-  \item[123] Isto é outro número
-  \item[lauro cesar] este é o meu nome
-\end{siglas}
+%\begin{siglas}
+%  \item[Fig.] Area of the $i^{th}$ component
+%  \item[456] Isto é um número
+%  \item[123] Isto é outro número
+%  \item[lauro cesar] este é o meu nome
+%\end{siglas}
 % ---
 
 % ---
 % inserir lista de símbolos
 % ---
-\begin{simbolos}
-  \item[$ \Gamma $] Letra grega Gama
-  \item[$ \Lambda $] Lambda
-  \item[$ \zeta $] Letra grega minúscula zeta
-  \item[$ \in $] Pertence
-\end{simbolos}
+%\begin{simbolos}
+%  \item[$ \Gamma $] Letra grega Gama
+%  \item[$ \Lambda $] Lambda
+%  \item[$ \zeta $] Letra grega minúscula zeta
+%  \item[$ \in $] Pertence
+%\end{simbolos}
 % ---
 
 % ---
@@ -310,7 +306,19 @@ curso de Graduação em Ciência da Computação.
 % ----------------------------------------------------------
 \chapter*[Introdução]{Introdução}
 \addcontentsline{toc}{chapter}{Introdução}
+O presente trabalho é a conclusão da disciplina de Arquitetura de Computadores,
+ministrada pelo Prof. Marco Túlio Chella, na qual foi demonstrado o
+funcionamento e as unidades de processadores, inspirando-se principalmente na
+arquitetura Von Neumann.
 
+Para consolidar tais conhecimentos, foi requisitado este trabalho como última
+nota da disciplina. O objetivo é desenvolver um sistema computacional com
+processador e memória, desde o projeto da arquitetura até a implementação de um
+simulador do sistema, a fim de simular fielmente o funcionamento de um
+processador, analisando as operações a cada ciclo de \textit{clock}. O simulador de
+processador descrito se chama \textbf{Simula-CPU} (implementado em Java),
+baseado no processador hipotético \textbf{CPU(12237514)}, criado pelo autor para este
+trabalho.
 
 
 % ----------------------------------------------------------
@@ -318,6 +326,11 @@ curso de Graduação em Ciência da Computação.
 % ----------------------------------------------------------
 \chapter[Planejamento do Simulador]{Planejamento do simulador}
 \section{Pré-Projeto}
+Foram poucas as mudanças conceituais entre o projeto final e o pré-projeto. As
+unidades continuam sendo as mesmas (e com as mesmas funções), havendo apenas a
+inclusão de um decodificador e a ampliação da memória, devido a uma
+reestruturação da palavra. Ainda houve algumas mudanças no conjunto de
+instruções e no funcionamento de algumas.
 
 \section{Unidades do sistema}
 
@@ -332,33 +345,106 @@ curso de Graduação em Ciência da Computação.
 
 	\subsection{Processador}
 		\subsubsection{Registradores}
-		O processador possui 8 registradores de 16 bits, sendo que quatro
-		destes são acessíveis ao programador. São eles:
+		O processador possui 8 registradores de 16 bits, implementados com o
+		tipo \textit{short}. Destes, quatro são acessíveis ao programador.
 		\begin{alineas}
 			\item
-				AX
+				AX - Registrador acessível ao programador;
 			\item
-				BX
+				BX - Registrador acessível ao programador;
 			\item
-				CX
+				CX - Registrador acessível ao programador;
 			\item
-				DX
+				DX - Registrador acessível ao programador;
 			\item
-				PC
+				PC - Contador de Programa;
 			\item
-				IR
+				IR - Registrador de Instrução;
 			\item
-				MAR
+				MAR - Memory Adress Register. Funciona como buffer dos
+				endereços trocados entre o processador e o barramento;
 			\item
-				MBR
+				MBR - Memory Buffer Register. Funciona como buffer dos
+				dados trocados entre o processador e o barramento;
 		\end{alineas}
 
 		\subsubsection{Unidade de Controle de Fluxo e de Movimento de Dados}
+		Responsável por executar todas as operações que envolvam fluxo do
+		programa ou movimento de dados. Encapsula ainda o decodificador de
+		instrução;
 		\subsubsection{Decodificador}
+		Decodifica a instrução recebida, analisando se necessita de operando e
+		qual o tipo de operando utilizado por ela;
 		\subsubsection{ULA}
+		Responsável por todas as operações lógico-aritméticas. Possui um
+		registrador de estado, que armazena os estados "Operandos Iguais",
+		"Resultado Negativo" e "Resultado Zero".
 
 
 \section{Instruções}
+A implementação da
+
+\begin{tabular}{|c|c|c|}
+\hline
+Código & Mnemônico & Funcionamento \\
+\hline
+000000 & ADD \%AX, \%BX & AX := AX + BX \\
+\hline
+000001 & SUB \%AX, \%BX & AX := AX - BX \\
+\hline
+000010 & MUL \%AX, \%BX & CX:DX := AX * BX\\
+\hline
+000011 & DIV \%AX, \%BX & CX:DX := AX / BX \\
+\hline
+000100 & NOT \%AX &  AX := ~AX \\
+\hline
+000101 & AND \%AX, \%BX & AX := AX \& BX\\
+\hline
+000110 & OR \%AX, \%BX & AX := AX | BX \\
+\hline
+000111 & XOR \%AX, \%BX & AX \^ BX \\
+\hline
+00000 & NOP & Consome um ciclo de clock. \\
+\hline
+00001 & JMP \$<end> & PC := <end> \\
+\hline
+00010 & JZ & se ULA.estadoVazio() então PC := PC + 2 \\
+\hline
+00011 & JNZ & se não ULA.estadoVazio() então PC := PC + 2 \\
+\hline
+00100 & JE & se ULA.operandosIguais() então PC := PC + 2 \\
+\hline
+00101 & JNE & se não ULA.operandosIguais() então PC := PC + 2 \\
+\hline
+00110 & JNG & se ULA.resultadoNegativo() então PC := PC + 2 \\
+\hline
+00111 & HLT & Encerra o simulador \\
+\hline
+01000 & MOV \%AX, \%BX & AX := BX \\
+\hline
+01001 & MOV \%AX, \$<end> & AX := Memoria[<end>] \\
+\hline
+01010 & MOV \%AX, \#<valor> & AX := <valor> \\
+\hline
+01011 & MOV \$<end>, \%AX & Memoria[<end>] := AX \\
+\hline
+01100 & MOV \$<end>, \#<valor> & Memoria[<end>] := <valor> \\
+\hline
+\end{tabular}
+
+\section{Implementação}
+O Simula-CPU foi desenvolvido na linguagem de programação Java. Para
+representar os dados internos foram utilizados números inteiros, enquanto
+a memória utiliza um vetor de inteiros. Cada unidade descrita acima foi
+implementada em uma classe própria, aproveitando o paradigma de Orientação a
+Objetos.
+
+Os barramentos foram implementados como objetos Singleton, possuindo apenas um
+barramento de cada tipo, acessíveis através de métodos estáticos. Estratégias
+similares foram usadas nas classes de Memória e Processador. É importante notar
+que todas as unidades internas ao processador não são vistas fora do "pacote"
+onde estão, encapsulando o funcionamento destas.
+
 
 % ----------------------------------------------------------
 % Capitulo com exemplos de comandos inseridos de arquivo externo

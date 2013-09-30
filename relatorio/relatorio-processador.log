@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Arch Linux) (format=pdflatex 2013.9.10)  30 SEP 2013 01:08
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Arch Linux) (format=pdflatex 2013.9.10)  30 SEP 2013 02:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1074,32 +1074,27 @@ l.173
 
 
 
-]
+] [2] (./relatorio-processador.lof) [3
 
-LaTeX Warning: Citation `NBR6028:2003' on page 2 undefined on input line 242.
+] (./relatorio-processador.lot)
+[4
 
-[2] (./relatorio-processador.lof) [3
-
-] (./relatorio-processador.lot) [4
-
-]
-[5
-
+] (./relatorio-processador.toc) [5
 
 ] [6
 
 
-] (./relatorio-processador.toc) [7
+] [7
 
-] [8
+]
+Overfull \hbox (58.26111pt too wide) in paragraph at lines 387--434
+[][] 
+ []
 
-
-] [9
-
-] [10]
+[8] [9]
 No file relatorio-processador.bbl.
 No file relatorio-processador.ind.
-[11
+[10
 
 ]
 \tf@lof=\write5
@@ -1111,44 +1106,37 @@ No file relatorio-processador.ind.
 \tf@toc=\write7
 \openout7 = `relatorio-processador.toc'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 444.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 444.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 530.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 530.
  (./relatorio-processador.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 444.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 444.
-
-
-LaTeX Warning: There were undefined references.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 444.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 530.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 530.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 530.
  )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 178 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 12086 strings out of 493311
- 173070 string characters out of 6143650
- 388078 words of memory out of 5000000
- 15289 multiletter control sequences out of 15000+600000
- 54718 words of font info for 40 fonts, out of 8000000 for 9000
+ 12095 strings out of 493311
+ 173212 string characters out of 6143650
+ 390078 words of memory out of 5000000
+ 15300 multiletter control sequences out of 15000+600000
+ 61978 words of font info for 42 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 39i,12n,32p,248b,520s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share
-/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf-dist/fonts/enc/d
-vips/lm/lm-rm.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}</usr
-/share/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf-dist/fonts
-/type1/public/lm/lmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi8.
-pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf-di
-st/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf-dist/fonts/type1/public/lm
-/lmri10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/share
-/texmf-dist/fonts/type1/public/lm/lmss17.pfb></usr/share/texmf-dist/fonts/type1
-/public/lm/lmssbx10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmsy10.pfb
->
-Output written on relatorio-processador.pdf (12 pages, 186241 bytes).
+ 39i,12n,32p,248b,654s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/share
+/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf-dist/fonts/type1
+/public/lm/lmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr10.pfb></
+usr/share/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf-dist/fon
+ts/type1/public/lm/lmri10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmri
+12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/share/texm
+f-dist/fonts/type1/public/lm/lmss17.pfb></usr/share/texmf-dist/fonts/type1/publ
+ic/lm/lmssbx10.pfb>
+Output written on relatorio-processador.pdf (11 pages, 214697 bytes).
 PDF statistics:
- 228 PDF objects out of 1000 (max. 8388607)
- 197 compressed objects within 2 object streams
- 46 named destinations out of 1000 (max. 500000)
- 181 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 207 PDF objects out of 1000 (max. 8388607)
+ 178 compressed objects within 2 object streams
+ 40 named destinations out of 1000 (max. 500000)
+ 173 words of extra memory for PDF output out of 10000 (max. 10000000)
 
